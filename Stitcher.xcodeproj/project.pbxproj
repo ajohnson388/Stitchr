@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		185872DF9970AABF3B98F9B6 /* Pods_StitcherTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F883D4210A32E56CA63AF017 /* Pods_StitcherTests.framework */; };
+		424EFF1821F8DB2C00DDB4E5 /* SpotifyApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424EFF1721F8DB2C00DDB4E5 /* SpotifyApi.swift */; };
+		424EFF1E21F8E1F700DDB4E5 /* TokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424EFF1D21F8E1F700DDB4E5 /* TokenResponse.swift */; };
+		424EFF2021F8E3D600DDB4E5 /* Codable+Conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424EFF1F21F8E3D600DDB4E5 /* Codable+Conversion.swift */; };
+		424EFF2221F8E53C00DDB4E5 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424EFF2121F8E53C00DDB4E5 /* Logger.swift */; };
 		42CE582E21F8CFB000555CA0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CE582D21F8CFB000555CA0 /* AppDelegate.swift */; };
 		42CE583021F8CFB000555CA0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CE582F21F8CFB000555CA0 /* ViewController.swift */; };
 		42CE583521F8CFB100555CA0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42CE583421F8CFB100555CA0 /* Assets.xcassets */; };
@@ -39,6 +43,10 @@
 		099F734F4D3D8B4CF45C3B3A /* Pods-StitcherUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StitcherUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-StitcherUITests/Pods-StitcherUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		1DFBDE42F6027E791AF59F79 /* Pods-StitcherTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StitcherTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-StitcherTests/Pods-StitcherTests.debug.xcconfig"; sourceTree = "<group>"; };
 		259D5FC17BDA19BBCEE67BDE /* Pods-Stitcher.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stitcher.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Stitcher/Pods-Stitcher.debug.xcconfig"; sourceTree = "<group>"; };
+		424EFF1721F8DB2C00DDB4E5 /* SpotifyApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyApi.swift; sourceTree = "<group>"; };
+		424EFF1D21F8E1F700DDB4E5 /* TokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenResponse.swift; sourceTree = "<group>"; };
+		424EFF1F21F8E3D600DDB4E5 /* Codable+Conversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Codable+Conversion.swift"; sourceTree = "<group>"; };
+		424EFF2121F8E53C00DDB4E5 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		42CE582A21F8CFB000555CA0 /* Stitcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stitcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		42CE582D21F8CFB000555CA0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		42CE582F21F8CFB000555CA0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -87,6 +95,56 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		424EFF1521F8DB0B00DDB4E5 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				424EFF2521F8ED8500DDB4E5 /* Models */,
+				424EFF1621F8DB1300DDB4E5 /* Networking */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		424EFF1621F8DB1300DDB4E5 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				424EFF1721F8DB2C00DDB4E5 /* SpotifyApi.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		424EFF2321F8ED6000DDB4E5 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				424EFF1F21F8E3D600DDB4E5 /* Codable+Conversion.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		424EFF2421F8ED7600DDB4E5 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				424EFF2121F8E53C00DDB4E5 /* Logger.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		424EFF2521F8ED8500DDB4E5 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				424EFF1D21F8E1F700DDB4E5 /* TokenResponse.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		424EFF2621F8ED8F00DDB4E5 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				42CE582D21F8CFB000555CA0 /* AppDelegate.swift */,
+				42CE582F21F8CFB000555CA0 /* ViewController.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
 		42CE582121F8CFB000555CA0 = {
 			isa = PBXGroup;
 			children = (
@@ -112,8 +170,10 @@
 		42CE582C21F8CFB000555CA0 /* Stitcher */ = {
 			isa = PBXGroup;
 			children = (
-				42CE582D21F8CFB000555CA0 /* AppDelegate.swift */,
-				42CE582F21F8CFB000555CA0 /* ViewController.swift */,
+				424EFF2621F8ED8F00DDB4E5 /* UI */,
+				424EFF2421F8ED7600DDB4E5 /* Utilities */,
+				424EFF2321F8ED6000DDB4E5 /* Extensions */,
+				424EFF1521F8DB0B00DDB4E5 /* Data */,
 				42CE583421F8CFB100555CA0 /* Assets.xcassets */,
 				42CE583621F8CFB100555CA0 /* LaunchScreen.storyboard */,
 				42CE583921F8CFB100555CA0 /* Info.plist */,
@@ -375,8 +435,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				424EFF2021F8E3D600DDB4E5 /* Codable+Conversion.swift in Sources */,
+				424EFF2221F8E53C00DDB4E5 /* Logger.swift in Sources */,
 				42CE583021F8CFB000555CA0 /* ViewController.swift in Sources */,
+				424EFF1821F8DB2C00DDB4E5 /* SpotifyApi.swift in Sources */,
 				42CE582E21F8CFB000555CA0 /* AppDelegate.swift in Sources */,
+				424EFF1E21F8E1F700DDB4E5 /* TokenResponse.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
