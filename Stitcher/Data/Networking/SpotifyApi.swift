@@ -8,50 +8,112 @@
 
 import Foundation
 import Alamofire
+import OAuthSwift
 
-class SpotifyApi {
+final class SpotifyApi {
     
-    private let clientId = ""
-    private let authToken = ""
-    private let redirectUri = "com.meaningless.powerhour://callback"
-    private let accountsBaseUrl = "https://accounts.spotify.com/"
-    private let apiBaseUrl = "https://api.spotify.com/v1/"
-    private let permissionScopes = [
+    static let shared = SpotifyApi()
+    
+    private static let clientId = "1a0445c72ddd4934a8835cef2baf1a0c"
+    private static let clientSecret = "8875eec5f88c4154b39cbc3b045ddef2"
+    private static let redirectUri = "com.meaningless.Stitcher://oauth"
+    private static let accountsBaseUrl = "https://accounts.spotify.com/"
+    private static let apiBaseUrl = "https://api.spotify.com/v1/"
+    private static let permissionScopes = [
         "playlist-read-private",
         "playlist-modify-private",
         "playlist-modify-public",
-        "playlist-read-collaborative"
+        "playlist-read-collaborative",
+        "user-read-birthdate",
+        "user-read-email",
+        "user-read-private"
     ]
     
-    func requestAccessToken(code: String, completion: @escaping (TokenResponse?) -> ()) {
-        let parameters = [
-            "code": code,
-            "grant_type": "authorization_code",
-            "redirect_uri": redirectUri
-        ]
-        requestToken(parameters: parameters, completion: completion)
-    }
+    let oAuth = OAuth2Swift(
+        consumerKey: clientId,
+        consumerSecret: clientSecret,
+        authorizeUrl: accountsBaseUrl + "authorize",
+        accessTokenUrl: accountsBaseUrl + "token",
+        responseType: "token"
+    )
     
-    func requestRefreshToken(refreshToken: String, completion: @escaping (TokenResponse?) -> ()) {
-        let parameters = [
-            "refresh_token": refreshToken,
-            "grant_type": "refresh_token",
-        ]
-        requestToken(parameters: parameters, completion: completion)
-    }
+    private init() {}
     
-    private func requestToken(parameters: [String: String], completion: @escaping (TokenResponse?) -> ()) {
-        guard let url = URL(string: accountsBaseUrl + "api/token") else {
-            completion(nil)
+    
+    // MARK: - Accounts API
+    
+    func authorize(viewController: ViewController, completion: @escaping (Bool) -> ()) {
+        guard let redirectUrl = URL(string: SpotifyApi.redirectUri) else {
+            Logger.log("Failed to create the redirect url")
             return
         }
         
-        var parameters = parameters
-        parameters["client_id"] = clientId
-        parameters["client_secret"] = authToken
+        oAuth.allowMissingStateCheck = true
+        oAuth.authorizeURLHandler = SafariURLHandler(viewController: viewController, oauthSwift: oAuth)
+        oAuth.authorize(
+            withCallbackURL: redirectUrl,
+            scope: SpotifyApi.permissionScopes.joined(separator: " "),
+            state: "SPOTIFY",
+            success: { credential, response, parameters in
+                Cache.shared.isUserAuthorized = true
+                completion(true)
+            },
+            failure: { error in
+                Logger.log(error)
+                completion(false)
+            }
+        )
+    }
+    
+    
+    // MARK: - User API
+    
+    func getUserProfile(completion: @escaping (UserProfile?) -> ()) {
+        makeRequest(url: SpotifyApi.apiBaseUrl + "me", method: .GET, completion: completion)
+    }
+    
+    func getPlaylists(offset: Int = 0, limit: Int = 20, completion: @escaping (PagingResponse?) -> ()) {
+        let url = SpotifyApi.apiBaseUrl + "me/playlists"
+        let parameters = ["offset": offset, "limit": limit]
+        makeRequest(url: url, method: .GET, parameters: parameters, completion: completion)
+    }
+    
+    func createPlaylist(name: String, userId: String, completion: @escaping (Playlist?) -> ()) {
+        let url = SpotifyApi.apiBaseUrl + "users/\(userId)/playlists"
+        makeRequest(url: url, method: .POST, parameters: ["name": name], completion: completion)
+    }
+    
+    func addTracksToPlaylist(withId id: String, uris: [String], userId: String, completion: @escaping (SnapshotResponse?) -> ()) {
+        let url = SpotifyApi.apiBaseUrl + "playlists/\(userId)/tracks"
+        let parameters = ["uris": uris.joined(separator: ",")]
+        makeRequest(url: url, method: .POST, parameters: parameters, completion: completion)
+    }
+    
+    func removeTracksFromPlaylist(withId id: String, uris: [String], userId: String, completion: @escaping (SnapshotResponse?) -> ()) {
+        let url = SpotifyApi.apiBaseUrl + "playlists/\(userId)/tracks"
+        let parameters = ["tracks": uris.joined(separator: ",")]
+        makeRequest(url: url, method: .DELETE, parameters: parameters, completion: completion)
+    }
+    
+    private func makeRequest<T>(
+        url: String, method: OAuthSwiftHTTPRequest.Method,
+        parameters: OAuthSwift.Parameters? = nil, body: [String: Any]? = nil,
+        completion: @escaping (T?) -> ()) where T: Decodable {
         
-        request(url, method: .post, parameters: parameters).validate().responseData { response in
-            completion(TokenResponse.decode(data: response.data))
-        }
+        let data = body == nil ? nil : try? JSONSerialization.data(withJSONObject: body as Any, options: [])
+        oAuth.startAuthorizedRequest(
+            url,
+            method: method,
+            parameters: parameters ?? [:],
+            body: data,
+            success: { response in
+                    let object = T.decode(data: response.data)
+                    completion(object)
+            },
+            failure: { error in
+                Logger.log(error)
+                completion(nil)
+            }
+        )
     }
 }

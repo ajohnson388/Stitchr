@@ -9,7 +9,6 @@
 import Foundation
 
 struct TokenResponse: Codable {
-    
     let accessToken: String
     let tokenType: String
     let scope: String
