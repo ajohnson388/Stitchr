@@ -19,8 +19,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         
-        let controller = UINavigationController(rootViewController: ViewController())
+        let controller = UINavigationController(rootViewController: PlaylistsViewController())
         window?.rootViewController = controller
+        
+        Themes.current.apply()
         return true
     }
     

@@ -42,7 +42,7 @@ final class SpotifyApi {
     
     // MARK: - Accounts API
     
-    func authorize(viewController: ViewController, completion: @escaping (Bool) -> ()) {
+    func authorize(viewController: UIViewController, completion: @escaping (Bool) -> ()) {
         guard let redirectUrl = URL(string: SpotifyApi.redirectUri) else {
             Logger.log("Failed to create the redirect url")
             return
@@ -107,6 +107,7 @@ final class SpotifyApi {
             parameters: parameters ?? [:],
             body: data,
             success: { response in
+                    print(response.data)
                     let object = T.decode(data: response.data)
                     completion(object)
             },

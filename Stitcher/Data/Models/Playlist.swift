@@ -16,8 +16,8 @@ struct Playlist: Codable {
     let images: [Image]
     let name: String
     let owner: Owner
-    let itemPublic: Bool
-    let snapshotID: String
+    let itemPublic: Bool?
+    let snapshotID: String?
     let tracks: Tracks
     let type, uri: String
 }
