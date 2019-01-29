@@ -31,7 +31,6 @@ extension Decodable {
                        keyStrategy: JSONDecoder.KeyDecodingStrategy = .convertFromSnakeCase,
                        dateStrategy: JSONDecoder.DateDecodingStrategy = .iso8601) -> Self? {
         guard let data = data else { return nil }
-        print(try? JSONSerialization.jsonObject(with: data, options: []))
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = keyStrategy
         decoder.dateDecodingStrategy = dateStrategy

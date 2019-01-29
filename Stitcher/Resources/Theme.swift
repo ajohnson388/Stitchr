@@ -13,12 +13,16 @@ protocol Theme {
     var primaryColor: UIColor { get }
     var primaryLightColor: UIColor { get }
     var primaryDarkColor: UIColor { get }
-    var primaryTextColor: UIColor { get }
     
     var secondaryColor: UIColor { get }
     var secondaryLightColor: UIColor { get }
     var secondaryDarkColor: UIColor { get }
-    var secondaryTextColor: UIColor { get }
+    
+    var ternaryColor: UIColor { get }
+    var ternaryLightColor: UIColor { get }
+    var ternaryDarkColor: UIColor { get }
+    
+    var accentColor: UIColor { get }
 }
 
 extension Theme {
@@ -28,14 +32,21 @@ extension Theme {
     }
     
     func apply() {
-        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor : primaryTextColor]
-        UINavigationBar.appearance().largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : primaryTextColor]
+        UIBarButtonItem.appearance().tintColor = ternaryLightColor
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor : ternaryLightColor]
+        UINavigationBar.appearance().largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : ternaryLightColor]
         UINavigationBar.appearance().prefersLargeTitles = true
-        UILabel.appearance().textColor = primaryTextColor
+        UILabel.appearance().textColor = ternaryLightColor
         UINavigationBar.appearance().barTintColor = primaryDarkColor
-        UINavigationBar.appearance().tintColor = primaryTextColor
-        UITableView.appearance().backgroundColor = secondaryColor
-        UITableViewCell.appearance().backgroundColor = secondaryColor
+        UINavigationBar.appearance().tintColor = ternaryLightColor
+        UITableView.appearance().backgroundColor = ternaryColor
+        UITableViewCell.appearance().backgroundColor = ternaryLightColor
+        UISearchBar.appearance().barStyle = .black
+        UITextField.appearance().defaultTextAttributes = [NSAttributedString.Key.foregroundColor: ternaryLightColor]
+        UILabel.appearance(whenContainedInInstancesOf: [UIButton.self]).textColor = accentColor
+        UIButton.appearance().layer.cornerRadius = 3
+        UIButton.appearance().layer.borderColor = accentColor.cgColor
+        UIButton.appearance().layer.borderWidth = 1
     }
 }
 
@@ -62,11 +73,17 @@ struct Themes {
         var secondaryDarkColor: UIColor {
             return color(26, 27, 30)
         }
-        var primaryTextColor: UIColor {
+        var ternaryColor: UIColor {
+            return color(245, 245, 246)
+        }
+        var ternaryLightColor: UIColor {
             return color(255, 255, 255)
         }
-        var secondaryTextColor: UIColor {
-            return color(255, 255, 255)
+        var ternaryDarkColor: UIColor {
+            return color(225, 226, 225)
+        }
+        var accentColor: UIColor {
+            return color(132, 74, 168)
         }
     }
 }

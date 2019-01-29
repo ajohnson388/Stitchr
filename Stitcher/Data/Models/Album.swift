@@ -1,24 +1,22 @@
 //
-//  Playlist.swift
+//  Album.swift
 //  Stitcher
 //
-//  Created by Andrew Johnson on 1/23/19.
+//  Created by Andrew Johnson on 1/25/19.
 //  Copyright © 2019 Meaningless. All rights reserved.
 //
 
 import Foundation
 
-struct Playlist: Codable {
-    let collaborative: Bool
+struct Album: Codable, Equatable {
+    let albumType: String
+    let artists: [AddedBy]
+    let availableMarkets: [String]
     let externalUrls: ExternalUrls
     let href: String
     let id: String
     let images: [Image]
     let name: String
-    let owner: Owner
-    let itemPublic: Bool?
-    let snapshotID: String?
-    let tracks: Tracks
     let type: String
     let uri: String
 }

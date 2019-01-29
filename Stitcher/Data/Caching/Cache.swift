@@ -7,35 +7,30 @@
 //
 
 import Foundation
+import OAuthSwift
 
-class Cache {
+/**
+    A service for caching data locally.
+ */
+protocol Cache: class {
     
-    static let shared = Cache()
+    /**
+        A listener for observing changes in the cached data.
+     */
+    var delegate: CacheDelegate? { get set }
     
-    var isUserAuthorized: Bool {
-        get {
-            return UserDefaults.standard.bool(forKey: Key.isUserAuthorized.rawValue)
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Key.isUserAuthorized.rawValue)
-            UserDefaults.standard.synchronize()
-        }
-    }
+    /**
+        True, if the user has authorized the app for Spotify.
+     */
+    var isUserAuthorized: Bool { get set }
     
-    var userId: String? {
-        get {
-            return UserDefaults.standard.string(forKey: Key.userId.rawValue)
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Key.userId.rawValue)
-            UserDefaults.standard.synchronize()
-        }
-    }
+    /**
+        The credentials used for OAuth.
+     */
+    var userCredentials: OAuthSwiftCredential? { get set }
     
-    private init() {}
-    
-    enum Key: String {
-        case isUserAuthorized
-        case userId
-    }
+    /**
+        The user's Spotify id.
+     */
+    var userId: String? { get set }
 }

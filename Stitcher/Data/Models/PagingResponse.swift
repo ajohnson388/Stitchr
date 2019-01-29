@@ -8,9 +8,9 @@
 
 import Foundation
 
-struct PagingResponse: Codable {
+struct PagingResponse<T: Codable>: Codable {
     let href: String
-    let items: [Playlist]
+    let items: [T]
     let limit: Int
     let next: String?
     let offset: Int

@@ -1,0 +1,28 @@
+/* 
+  Localizable.strings
+  Stitcher
+
+  Created by Andrew Johnson on 1/29/19.
+  Copyright © 2019 Meaningless. All rights reserved.
+*/
+
+// Playlists screen
+
+"playlistsTitle" = "Playlists";
+"loginRequiredTitle" = "Login Required";
+"errorTitle" = "Error";
+"playlistsEmptyTitle" = "No Playlists";
+"loginRequiredDescription" = "You need to authorize your Spotify account in order to use Stitcher.";
+"playlistsEmptyDescription" = "Your playlists are looking a little empty.. \n Would you like to create one?";
+"loginRequiredButtonTitle" = "Authorize";
+"errorButtonTitle" = "Try Again";
+"emptyPlaylistsButtonTitle" = "Create";
+"numberOfTracks" = " songs";
+
+
+// Playlist screen
+
+"searchSectionTitle" = "Search Results";
+"tracksSectionTitle" = "Tracks";
+"searchPlaceholder" = "Add more tracks...";
+"newPlaylistTitle" = "New Playlist";

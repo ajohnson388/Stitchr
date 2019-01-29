@@ -12,8 +12,6 @@ import OAuthSwift
 
 final class SpotifyApi {
     
-    static let shared = SpotifyApi()
-    
     private static let clientId = "1a0445c72ddd4934a8835cef2baf1a0c"
     private static let clientSecret = "8875eec5f88c4154b39cbc3b045ddef2"
     private static let redirectUri = "com.meaningless.Stitcher://oauth"
@@ -37,7 +35,16 @@ final class SpotifyApi {
         responseType: "token"
     )
     
-    private init() {}
+    private let cache: Cache
+    
+    init(cache: Cache = LocalCache()) {
+        self.cache = cache
+        if let credentials = cache.userCredentials {
+            oAuth.client.credential.oauthToken = credentials.oauthToken
+            oAuth.client.credential.oauthRefreshToken = credentials.oauthRefreshToken
+            oAuth.client.credential.oauthTokenExpiresAt = credentials.oauthTokenExpiresAt
+        }
+    }
     
     
     // MARK: - Accounts API
@@ -55,7 +62,8 @@ final class SpotifyApi {
             scope: SpotifyApi.permissionScopes.joined(separator: " "),
             state: "SPOTIFY",
             success: { credential, response, parameters in
-                Cache.shared.isUserAuthorized = true
+                self.cache.isUserAuthorized = true
+                self.cache.userCredentials = credential
                 completion(true)
             },
             failure: { error in
@@ -72,32 +80,48 @@ final class SpotifyApi {
         makeRequest(url: SpotifyApi.apiBaseUrl + "me", method: .GET, completion: completion)
     }
     
-    func getPlaylists(offset: Int = 0, limit: Int = 20, completion: @escaping (PagingResponse?) -> ()) {
+    func getPlaylists(offset: Int = 0, limit: Int = 20, completion: @escaping (PagingResponse<Playlist>?) -> ()) {
         let url = SpotifyApi.apiBaseUrl + "me/playlists"
         let parameters = ["offset": offset, "limit": limit]
         makeRequest(url: url, method: .GET, parameters: parameters, completion: completion)
     }
     
+    func getPlaylistTracks(playlistId: String, offset: Int = 0, limit: Int = 20,
+                           completion: @escaping (PagingResponse<TrackItem>?) -> ()) {
+        let url = SpotifyApi.apiBaseUrl + "playlists/\(playlistId)/tracks"
+        let parameters = ["offset": offset, "limit": limit]
+        makeRequest(url: url, method: .GET, parameters: parameters, completion: completion)
+    }
+    
+    func searchTracks(searchTerm: String, offset: Int = 0, limit: Int = 20,
+                      completion: @escaping (SearchResponse?) -> ()) {
+        let url = SpotifyApi.apiBaseUrl + "search"
+        let parameters = ["q": searchTerm, "limit": "\(limit)", "offset": "\(offset)", "type": "track"]
+        makeRequest(url: url, method: .GET, parameters: parameters, completion: completion)
+    }
+    
     func createPlaylist(name: String, userId: String, completion: @escaping (Playlist?) -> ()) {
         let url = SpotifyApi.apiBaseUrl + "users/\(userId)/playlists"
-        makeRequest(url: url, method: .POST, parameters: ["name": name], completion: completion)
+        makeRequest(url: url, method: .POST, body: ["name": name, "public": false], completion: completion)
     }
     
-    func addTracksToPlaylist(withId id: String, uris: [String], userId: String, completion: @escaping (SnapshotResponse?) -> ()) {
-        let url = SpotifyApi.apiBaseUrl + "playlists/\(userId)/tracks"
-        let parameters = ["uris": uris.joined(separator: ",")]
-        makeRequest(url: url, method: .POST, parameters: parameters, completion: completion)
+    func addTracksToPlaylist(withId id: String, uris: [String], completion: @escaping (SnapshotResponse?) -> ()) {
+        let url = SpotifyApi.apiBaseUrl + "playlists/\(id)/tracks"
+        let parameters = ["uris": uris]
+        makeRequest(url: url, method: .POST, body: parameters, completion: completion)
     }
     
-    func removeTracksFromPlaylist(withId id: String, uris: [String], userId: String, completion: @escaping (SnapshotResponse?) -> ()) {
-        let url = SpotifyApi.apiBaseUrl + "playlists/\(userId)/tracks"
-        let parameters = ["tracks": uris.joined(separator: ",")]
-        makeRequest(url: url, method: .DELETE, parameters: parameters, completion: completion)
+    func removeTracksFromPlaylist(withId id: String, uris: [String], completion: @escaping (SnapshotResponse?) -> ()) {
+        let url = SpotifyApi.apiBaseUrl + "playlists/\(id)/tracks"
+        let tracks = uris.map { ["uri": $0] }
+        let parameters = ["tracks": tracks]
+        makeRequest(url: url, method: .DELETE, body: parameters, completion: completion)
     }
     
     private func makeRequest<T>(
         url: String, method: OAuthSwiftHTTPRequest.Method,
         parameters: OAuthSwift.Parameters? = nil, body: [String: Any]? = nil,
+        headers: [String: String]? = nil,
         completion: @escaping (T?) -> ()) where T: Decodable {
         
         let data = body == nil ? nil : try? JSONSerialization.data(withJSONObject: body as Any, options: [])
@@ -105,13 +129,17 @@ final class SpotifyApi {
             url,
             method: method,
             parameters: parameters ?? [:],
+            headers: headers,
             body: data,
             success: { response in
-                    print(response.data)
                     let object = T.decode(data: response.data)
                     completion(object)
             },
             failure: { error in
+                if error.errorCode == -11 {
+                    self.cache.isUserAuthorized = false
+                    self.cache.userCredentials = nil
+                }
                 Logger.log(error)
                 completion(nil)
             }
