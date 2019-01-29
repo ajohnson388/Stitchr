@@ -7,17 +7,24 @@
 //
 
 import Foundation
+import OAuthSwift
 
 protocol PlaylistPresenterDelegate: class {
     func tracksDidChange(_ tracks: [TrackItem])
     func searchResultsDidChange(_ tracks: [Track])
+    func isUserAuthenticatedDidChange(_ isAuthenticated: Bool)
+    func errorDidChange(_ error: String?)
+    func isLoadingChanged(_ isLoading: Bool)
 }
 
 final class PlaylistPresenter {
     
     weak var delegate: PlaylistPresenterDelegate?
     
+    private var currentSearchRequest: Cancellable?
     var playlist: Playlist?
+    
+    
     private let cache: Cache
     private let spotifyApi: SpotifyApi
     
@@ -27,10 +34,20 @@ final class PlaylistPresenter {
     private(set) var searchResults: [Track] = [] {
         didSet { delegate?.searchResultsDidChange(searchResults) }
     }
+    private(set) var isAuthenticated: Bool {
+        didSet { delegate?.isUserAuthenticatedDidChange(isAuthenticated) }
+    }
+    private(set) var error: String? {
+        didSet { delegate?.errorDidChange(error) }
+    }
+    private(set) var isLoading: Bool = false {
+        didSet { delegate?.isLoadingChanged(isLoading) }
+    }
     
     init(cache: Cache, spotifyApi: SpotifyApi = SpotifyApi()) {
         self.cache = cache
         self.spotifyApi = spotifyApi
+        isAuthenticated = cache.userCredentials != nil
     }
     
     func setPlaylist(playlist: Playlist?) {
@@ -38,10 +55,14 @@ final class PlaylistPresenter {
     }
     
     func loadTracks() {
-        guard let playlist = playlist else { return }
+        guard let playlist = playlist else {
+            return
+        }
+        isLoading = true
         spotifyApi.getPlaylistTracks(playlistId: playlist.id) { pagingResponse in
             let items = pagingResponse?.items ?? []
             self.tracks = items
+            self.isLoading = false
         }
      }
     
@@ -51,9 +72,12 @@ final class PlaylistPresenter {
             return
         }
         
-        spotifyApi.searchTracks(searchTerm: text) { searchResponse in
+        currentSearchRequest?.cancel()
+        let cancellable = spotifyApi.searchTracks(searchTerm: text) { searchResponse in
             self.searchResults = searchResponse?.tracks.items ?? []
+            self.currentSearchRequest = nil
         }
+        currentSearchRequest = cancellable
     }
     
     func addTrack(at index: Int, completion: @escaping (Bool) -> ()) {
@@ -100,5 +124,13 @@ final class PlaylistPresenter {
             completion(true)
             self.tracks.remove(at: index)
         }
+    }
+}
+
+
+extension PlaylistPresenter: CacheDelegate {
+    
+    func userCredentialsDidChange(_ credentials: OAuthSwiftCredential?) {
+        isAuthenticated = credentials != nil
     }
 }

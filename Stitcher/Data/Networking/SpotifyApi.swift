@@ -9,6 +9,7 @@
 import Foundation
 import Alamofire
 import OAuthSwift
+import SafariServices
 
 final class SpotifyApi {
     
@@ -56,7 +57,15 @@ final class SpotifyApi {
         }
         
         oAuth.allowMissingStateCheck = true
-        oAuth.authorizeURLHandler = SafariURLHandler(viewController: viewController, oauthSwift: oAuth)
+        
+        let safariHandler = SafariURLHandler(viewController: viewController, oauthSwift: oAuth)
+        safariHandler.factory = { url in
+            let controller = SFSafariViewController(url: url)
+            Themes.current.apply(safariViewController: controller)
+            return controller
+        }
+        oAuth.authorizeURLHandler = safariHandler
+
         oAuth.authorize(
             withCallbackURL: redirectUrl,
             scope: SpotifyApi.permissionScopes.joined(separator: " "),
@@ -77,55 +86,58 @@ final class SpotifyApi {
     // MARK: - User API
     
     func getUserProfile(completion: @escaping (UserProfile?) -> ()) {
-        makeRequest(url: SpotifyApi.apiBaseUrl + "me", method: .GET, completion: completion)
+        _ = makeRequest(url: SpotifyApi.apiBaseUrl + "me", method: .GET, completion: completion)
     }
     
     func getPlaylists(offset: Int = 0, limit: Int = 20, completion: @escaping (PagingResponse<Playlist>?) -> ()) {
         let url = SpotifyApi.apiBaseUrl + "me/playlists"
         let parameters = ["offset": offset, "limit": limit]
-        makeRequest(url: url, method: .GET, parameters: parameters, completion: completion)
+        _ = makeRequest(url: url, method: .GET, parameters: parameters, completion: completion)
     }
     
     func getPlaylistTracks(playlistId: String, offset: Int = 0, limit: Int = 20,
                            completion: @escaping (PagingResponse<TrackItem>?) -> ()) {
         let url = SpotifyApi.apiBaseUrl + "playlists/\(playlistId)/tracks"
         let parameters = ["offset": offset, "limit": limit]
-        makeRequest(url: url, method: .GET, parameters: parameters, completion: completion)
+        _ = makeRequest(url: url, method: .GET, parameters: parameters, completion: completion)
     }
     
     func searchTracks(searchTerm: String, offset: Int = 0, limit: Int = 20,
-                      completion: @escaping (SearchResponse?) -> ()) {
+                      completion: @escaping (SearchResponse?) -> ()) -> Cancellable? {
         let url = SpotifyApi.apiBaseUrl + "search"
         let parameters = ["q": searchTerm, "limit": "\(limit)", "offset": "\(offset)", "type": "track"]
-        makeRequest(url: url, method: .GET, parameters: parameters, completion: completion)
+        guard let request = makeRequest(url: url, method: .GET, parameters: parameters, completion: completion) else {
+            return nil
+        }
+        return CancellableRequest(request)
     }
     
     func createPlaylist(name: String, userId: String, completion: @escaping (Playlist?) -> ()) {
         let url = SpotifyApi.apiBaseUrl + "users/\(userId)/playlists"
-        makeRequest(url: url, method: .POST, body: ["name": name, "public": false], completion: completion)
+        _ = makeRequest(url: url, method: .POST, body: ["name": name, "public": false], completion: completion)
     }
     
     func addTracksToPlaylist(withId id: String, uris: [String], completion: @escaping (SnapshotResponse?) -> ()) {
         let url = SpotifyApi.apiBaseUrl + "playlists/\(id)/tracks"
         let parameters = ["uris": uris]
-        makeRequest(url: url, method: .POST, body: parameters, completion: completion)
+        _ = makeRequest(url: url, method: .POST, body: parameters, completion: completion)
     }
     
     func removeTracksFromPlaylist(withId id: String, uris: [String], completion: @escaping (SnapshotResponse?) -> ()) {
         let url = SpotifyApi.apiBaseUrl + "playlists/\(id)/tracks"
         let tracks = uris.map { ["uri": $0] }
         let parameters = ["tracks": tracks]
-        makeRequest(url: url, method: .DELETE, body: parameters, completion: completion)
+        _ = makeRequest(url: url, method: .DELETE, body: parameters, completion: completion)
     }
     
     private func makeRequest<T>(
         url: String, method: OAuthSwiftHTTPRequest.Method,
         parameters: OAuthSwift.Parameters? = nil, body: [String: Any]? = nil,
         headers: [String: String]? = nil,
-        completion: @escaping (T?) -> ()) where T: Decodable {
+        completion: @escaping (T?) -> ()) -> OAuthSwiftRequestHandle? where T: Decodable {
         
         let data = body == nil ? nil : try? JSONSerialization.data(withJSONObject: body as Any, options: [])
-        oAuth.startAuthorizedRequest(
+        return oAuth.startAuthorizedRequest(
             url,
             method: method,
             parameters: parameters ?? [:],

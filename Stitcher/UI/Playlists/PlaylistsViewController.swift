@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import SDWebImage
 import DZNEmptyDataSet
+import OAuthSwift
 
 final class PlaylistsViewController: UITableViewController {
     
@@ -145,6 +146,7 @@ final class PlaylistsViewController: UITableViewController {
         let cache = LocalCache()
         let spotifyApi = SpotifyApi(cache: cache)
         let playlistPresenter = PlaylistPresenter(cache: cache, spotifyApi: spotifyApi)
+        cache.delegate = playlistPresenter
         playlistPresenter.setPlaylist(playlist: playlist)
         let playlistViewController = PlaylistViewController(presenter: playlistPresenter)
         navigationController?.pushViewController(playlistViewController, animated: true)
@@ -155,7 +157,9 @@ extension PlaylistsViewController: PlaylistsPresenterDelegate {
     
     func playlistsDidChange(_ playlists: [Playlist]) {
         tableView.refreshControl?.endRefreshing()
-        tableView.reloadData()
+        tableView.beginUpdates()
+        tableView.reloadSections(IndexSet(integer: 0), with: .fade)
+        tableView.endUpdates()
     }
     
     func isUserAuthenticatedDidChange(_ isAuthenticated: Bool) {
@@ -175,20 +179,18 @@ extension PlaylistsViewController: PlaylistsPresenterDelegate {
     }
     
     func isLoadingChanged(_ isLoading: Bool) {
-        // TODO: Fix crash
-//        let isRefreshing = tableView.refreshControl?.isRefreshing ?? false
-//        if !isRefreshing && isLoading {
-//            tableView.refreshControl?.beginRefreshing()
-//        } else if (!isLoading) {
-//            tableView.refreshControl?.endRefreshing()
-//        }
+        if presenter.playlists.isEmpty && isLoading {
+            tableView.reloadEmptyDataSet()
+        }
     }
 }
 
 extension PlaylistsViewController: DZNEmptyDataSetSource {
     
     func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
-        if !presenter.isAuthenticated {
+        if presenter.isLoading {
+            return "\n".attributed
+        } else if !presenter.isAuthenticated {
             return Strings.loginRequiredTitle.localized.attributed
         } else if presenter.error != nil {
             return Strings.errorTitle.localized.attributed
@@ -198,7 +200,9 @@ extension PlaylistsViewController: DZNEmptyDataSetSource {
     }
     
     func description(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
-        if !presenter.isAuthenticated {
+        if presenter.isLoading {
+            return "\n\n\n\n\n".attributed
+        } else if !presenter.isAuthenticated {
             return Strings.loginRequiredDescription.localized.attributed
         } else if let error = presenter.error {
             return error.attributed
@@ -211,8 +215,20 @@ extension PlaylistsViewController: DZNEmptyDataSetSource {
         return tableView.backgroundColor
     }
     
+    func image(forEmptyDataSet scrollView: UIScrollView!) -> UIImage! {
+        if presenter.isLoading || !presenter.isAuthenticated {
+            let indices = [1, 2, 3, 2]
+            let images = indices.compactMap { UIImage(named: "LoadingIcon\($0)") }
+            return UIImage.animatedImage(with: images, duration: 0.5)
+        } else {
+            return nil
+        }
+    }
+    
     func buttonTitle(forEmptyDataSet scrollView: UIScrollView!, for state: UIControl.State) -> NSAttributedString! {
-        if !presenter.isAuthenticated {
+        if presenter.isLoading {
+            return nil
+        } else if !presenter.isAuthenticated {
             return Strings.loginRequiredButtonTitle.localized.attributed
         } else if presenter.error != nil {
             return Strings.errorButtonTitle.localized.attributed
@@ -225,7 +241,7 @@ extension PlaylistsViewController: DZNEmptyDataSetSource {
 extension PlaylistsViewController: DZNEmptyDataSetDelegate {
     
     func emptyDataSetShouldAllowScroll(_ scrollView: UIScrollView!) -> Bool {
-        return true
+        return presenter.isAuthenticated
     }
     
     func emptyDataSet(_ scrollView: UIScrollView!, didTap button: UIButton!) {

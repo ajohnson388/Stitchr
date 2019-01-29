@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import SDWebImage
+import DZNEmptyDataSet
 
 /**
     The user interface for adding, re-ordering, and remove tacks in a playlist.
@@ -103,6 +104,8 @@ final class PlaylistViewController: UITableViewController {
         searchController.searchBar.placeholder = Strings.searchPlaceholder.localized
         navigationItem.searchController = searchController
         definesPresentationContext = true
+        tableView.emptyDataSetSource = self
+        tableView.emptyDataSetDelegate = self
     }
 }
 
@@ -112,11 +115,28 @@ final class PlaylistViewController: UITableViewController {
 extension PlaylistViewController: PlaylistPresenterDelegate {
     
     func tracksDidChange(_ tracks: [TrackItem]) {
-        tableView.reloadData()
+        tableView.beginUpdates()
+        tableView.reloadSections(IndexSet(integer: 0), with: .fade)
+        tableView.endUpdates()
     }
     
     func searchResultsDidChange(_ tracks: [Track]) {
         tableView.reloadData()
+    }
+    
+    
+    func isUserAuthenticatedDidChange(_ isAuthenticated: Bool) {
+        presenter.loadTracks()
+    }
+    
+    func errorDidChange(_ error: String?) {
+        tableView.reloadEmptyDataSet()
+    }
+    
+    func isLoadingChanged(_ isLoading: Bool) {
+        if (presenter.tracks.isEmpty || presenter.searchResults.isEmpty) && isLoading {
+            tableView.reloadEmptyDataSet()
+        }
     }
 }
 
@@ -131,5 +151,76 @@ extension PlaylistViewController: UISearchControllerDelegate, UISearchResultsUpd
     
     func didDismissSearchController(_ searchController: UISearchController) {
         tableView.reloadData()
+    }
+}
+
+
+extension PlaylistViewController: DZNEmptyDataSetSource {
+    
+    func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
+        if presenter.isLoading {
+            return nil
+        } else if !presenter.isAuthenticated {
+            return Strings.loginRequiredTitle.localized.attributed
+        } else if presenter.error != nil {
+            return Strings.errorTitle.localized.attributed
+        } else {
+            return Strings.playlistsEmptyTitle.localized.attributed
+        }
+    }
+    
+    func description(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
+        if presenter.isLoading {
+            return nil
+        } else if !presenter.isAuthenticated {
+            return Strings.loginRequiredDescription.localized.attributed
+        } else if let error = presenter.error {
+            return error.attributed
+        } else {
+            return Strings.playlistsEmptyDescription.localized.attributed
+        }
+    }
+    
+    func backgroundColor(forEmptyDataSet scrollView: UIScrollView!) -> UIColor! {
+        return tableView.backgroundColor
+    }
+    
+    func image(forEmptyDataSet scrollView: UIScrollView!) -> UIImage! {
+        if presenter.isLoading || !presenter.isAuthenticated {
+            let indices = [1, 2, 3, 2]
+            let images = indices.compactMap { UIImage(named: "LoadingIcon\($0)") }
+            return UIImage.animatedImage(with: images, duration: 0.5)
+        } else {
+            return nil
+        }
+    }
+    
+    func buttonTitle(forEmptyDataSet scrollView: UIScrollView!, for state: UIControl.State) -> NSAttributedString! {
+        if presenter.isLoading {
+            return nil
+        } else if !presenter.isAuthenticated {
+            return Strings.loginRequiredButtonTitle.localized.attributed
+        } else if presenter.error != nil {
+            return Strings.errorButtonTitle.localized.attributed
+        } else {
+            return Strings.emptyPlaylistsButtonTitle.localized.attributed
+        }
+    }
+}
+
+extension PlaylistViewController: DZNEmptyDataSetDelegate {
+    
+    func emptyDataSetShouldAllowScroll(_ scrollView: UIScrollView!) -> Bool {
+        return presenter.isAuthenticated
+    }
+    
+    func emptyDataSet(_ scrollView: UIScrollView!, didTap button: UIButton!) {
+//        if !presenter.isAuthenticated {
+//            presenter.login(viewController: self)
+//        } else if presenter.error != nil {
+//            presenter.fetchPlaylists()
+//        } else {
+//            openPlaylist(playlist: nil)
+//        }
     }
 }

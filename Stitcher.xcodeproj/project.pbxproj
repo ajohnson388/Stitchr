@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		185872DF9970AABF3B98F9B6 /* Pods_StitcherTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F883D4210A32E56CA63AF017 /* Pods_StitcherTests.framework */; };
+		422E8CFE2200FC770069BF1B /* Cancellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E8CFD2200FC770069BF1B /* Cancellable.swift */; };
 		424EFF1821F8DB2C00DDB4E5 /* SpotifyApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424EFF1721F8DB2C00DDB4E5 /* SpotifyApi.swift */; };
 		424EFF1E21F8E1F700DDB4E5 /* TokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424EFF1D21F8E1F700DDB4E5 /* TokenResponse.swift */; };
 		424EFF2021F8E3D600DDB4E5 /* Codable+Conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424EFF1F21F8E3D600DDB4E5 /* Codable+Conversion.swift */; };
@@ -72,6 +73,7 @@
 		099F734F4D3D8B4CF45C3B3A /* Pods-StitcherUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StitcherUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-StitcherUITests/Pods-StitcherUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		1DFBDE42F6027E791AF59F79 /* Pods-StitcherTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StitcherTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-StitcherTests/Pods-StitcherTests.debug.xcconfig"; sourceTree = "<group>"; };
 		259D5FC17BDA19BBCEE67BDE /* Pods-Stitcher.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stitcher.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Stitcher/Pods-Stitcher.debug.xcconfig"; sourceTree = "<group>"; };
+		422E8CFD2200FC770069BF1B /* Cancellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cancellable.swift; sourceTree = "<group>"; };
 		424EFF1721F8DB2C00DDB4E5 /* SpotifyApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyApi.swift; sourceTree = "<group>"; };
 		424EFF1D21F8E1F700DDB4E5 /* TokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenResponse.swift; sourceTree = "<group>"; };
 		424EFF1F21F8E3D600DDB4E5 /* Codable+Conversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Codable+Conversion.swift"; sourceTree = "<group>"; };
@@ -208,6 +210,7 @@
 				42EA313121FB9BFE00A6E9F0 /* ExternalIds.swift */,
 				42EA313321FB9C4000A6E9F0 /* TrackItem.swift */,
 				42EA313721FBB3B600A6E9F0 /* SearchResponse.swift */,
+				422E8CFD2200FC770069BF1B /* Cancellable.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -559,6 +562,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				422E8CFE2200FC770069BF1B /* Cancellable.swift in Sources */,
 				424EFF2021F8E3D600DDB4E5 /* Codable+Conversion.swift in Sources */,
 				42AEA87121FFE33300B59EC6 /* Collection+Count.swift in Sources */,
 				42EA313221FB9BFE00A6E9F0 /* ExternalIds.swift in Sources */,

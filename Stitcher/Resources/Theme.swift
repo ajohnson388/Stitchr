@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import SafariServices
 
 protocol Theme {
     var primaryColor: UIColor { get }
@@ -47,6 +48,11 @@ extension Theme {
         UIButton.appearance().layer.cornerRadius = 3
         UIButton.appearance().layer.borderColor = accentColor.cgColor
         UIButton.appearance().layer.borderWidth = 1
+    }
+    
+    func apply(safariViewController: SFSafariViewController) {
+        safariViewController.preferredControlTintColor = ternaryLightColor
+        safariViewController.preferredBarTintColor = primaryDarkColor
     }
 }
 
