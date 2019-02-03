@@ -13,8 +13,6 @@ import SafariServices
 
 final class SpotifyApi {
     
-    private static let clientId = "1a0445c72ddd4934a8835cef2baf1a0c"
-    private static let clientSecret = "8875eec5f88c4154b39cbc3b045ddef2"
     private static let redirectUri = "com.meaningless.Stitcher://oauth"
     private static let accountsBaseUrl = "https://accounts.spotify.com/"
     private static let apiBaseUrl = "https://api.spotify.com/v1/"
@@ -29,8 +27,8 @@ final class SpotifyApi {
     ]
     
     let oAuth = OAuth2Swift(
-        consumerKey: clientId,
-        consumerSecret: clientSecret,
+        consumerKey: BuildConfig.spotifyClientId,
+        consumerSecret: BuildConfig.spotifyClientSecret,
         authorizeUrl: accountsBaseUrl + "authorize",
         accessTokenUrl: accountsBaseUrl + "token",
         responseType: "token"

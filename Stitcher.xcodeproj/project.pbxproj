@@ -41,6 +41,7 @@
 		42CE583821F8CFB100555CA0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42CE583621F8CFB100555CA0 /* LaunchScreen.storyboard */; };
 		42CE584321F8CFB100555CA0 /* StitcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CE584221F8CFB100555CA0 /* StitcherTests.swift */; };
 		42CE584E21F8CFB100555CA0 /* StitcherUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CE584D21F8CFB100555CA0 /* StitcherUITests.swift */; };
+		42D3EF47220769EF005BDB8F /* BuildConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D3EF46220769EF005BDB8F /* BuildConfig.swift */; };
 		42DCE73221FCF01D00218637 /* ViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DCE73121FCF01D00218637 /* ViewFactory.swift */; };
 		42EA312521FB864600A6E9F0 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42EA312421FB864600A6E9F0 /* Theme.swift */; };
 		42EA312821FB974A00A6E9F0 /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42EA312721FB974A00A6E9F0 /* PlaylistViewController.swift */; };
@@ -115,6 +116,8 @@
 		42CE584921F8CFB100555CA0 /* StitcherUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StitcherUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		42CE584D21F8CFB100555CA0 /* StitcherUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StitcherUITests.swift; sourceTree = "<group>"; };
 		42CE584F21F8CFB100555CA0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		42D3EF4522076814005BDB8F /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		42D3EF46220769EF005BDB8F /* BuildConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildConfig.swift; sourceTree = "<group>"; };
 		42DCE73121FCF01D00218637 /* ViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewFactory.swift; sourceTree = "<group>"; };
 		42EA312421FB864600A6E9F0 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		42EA312721FB974A00A6E9F0 /* PlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistViewController.swift; sourceTree = "<group>"; };
@@ -268,6 +271,7 @@
 				42EA312421FB864600A6E9F0 /* Theme.swift */,
 				42AEA8792200A2E400B59EC6 /* Images.swift */,
 				42AEA8772200A1E500B59EC6 /* Strings.swift */,
+				42D3EF46220769EF005BDB8F /* BuildConfig.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -275,6 +279,7 @@
 		42CE582121F8CFB000555CA0 = {
 			isa = PBXGroup;
 			children = (
+				42D3EF4522076814005BDB8F /* Secrets.xcconfig */,
 				42CE582C21F8CFB000555CA0 /* Stitcher */,
 				42CE584121F8CFB100555CA0 /* StitcherTests */,
 				42CE584C21F8CFB100555CA0 /* StitcherUITests */,
@@ -579,6 +584,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42D3EF47220769EF005BDB8F /* BuildConfig.swift in Sources */,
 				422E8CFE2200FC770069BF1B /* Cancellable.swift in Sources */,
 				424EFF2021F8E3D600DDB4E5 /* Codable+Conversion.swift in Sources */,
 				42AEA87121FFE33300B59EC6 /* Collection+Count.swift in Sources */,
@@ -673,6 +679,7 @@
 /* Begin XCBuildConfiguration section */
 		42CE585021F8CFB100555CA0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 42D3EF4522076814005BDB8F /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -734,6 +741,7 @@
 		};
 		42CE585121F8CFB100555CA0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 42D3EF4522076814005BDB8F /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
