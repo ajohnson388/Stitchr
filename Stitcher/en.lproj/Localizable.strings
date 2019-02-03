@@ -26,3 +26,10 @@
 "tracksSectionTitle" = "Tracks";
 "searchPlaceholder" = "Add more tracks...";
 "newPlaylistTitle" = "New Playlist";
+"tracksEmptyTitle" = "No Tracks";
+"tracksEmptyDescription" = "Your playlist is looking a little empty.. \n Try adding a track by using the search bar at the top.";
+"tracksEmptyButtonTitle" = "Search";
+"tracksFooterDescription" = "* Swipe to the left to add or remove tracks.";
+
+"searchResultsEmptyTitle" = "No Results for ";
+"searchResultsDescription" = "Try searching something different.";

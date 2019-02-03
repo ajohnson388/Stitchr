@@ -23,6 +23,12 @@ enum Strings: String {
     case searchPlaceholder
     case newPlaylistTitle
     case numberOfTracks
+    case tracksEmptyTitle
+    case tracksEmptyDescription
+    case tracksEmptyButtonTitle
+    case tracksFooterDescription
+    case searchResultsEmptyTitle
+    case searchResultsDescription
     
     var localized: String {
         return NSLocalizedString(rawValue, comment: "")

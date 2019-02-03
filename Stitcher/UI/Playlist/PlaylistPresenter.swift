@@ -9,45 +9,35 @@
 import Foundation
 import OAuthSwift
 
-protocol PlaylistPresenterDelegate: class {
+protocol PlaylistPresenterDelegate: BasePresenterDelegate {
     func tracksDidChange(_ tracks: [TrackItem])
     func searchResultsDidChange(_ tracks: [Track])
-    func isUserAuthenticatedDidChange(_ isAuthenticated: Bool)
-    func errorDidChange(_ error: String?)
-    func isLoadingChanged(_ isLoading: Bool)
 }
 
-final class PlaylistPresenter {
+final class PlaylistPresenter: BasePresenter {
     
-    weak var delegate: PlaylistPresenterDelegate?
+    weak var playlistDelegate: PlaylistPresenterDelegate? {
+        didSet {
+            self.delegate = playlistDelegate
+        }
+    }
     
     private var currentSearchRequest: Cancellable?
     var playlist: Playlist?
     
     
-    private let cache: Cache
-    private let spotifyApi: SpotifyApi
-    
     private(set) var tracks: [TrackItem] = [] {
-        didSet { delegate?.tracksDidChange(tracks) }
+        didSet {
+            error = nil
+            playlistDelegate?.tracksDidChange(tracks)
+        }
     }
     private(set) var searchResults: [Track] = [] {
-        didSet { delegate?.searchResultsDidChange(searchResults) }
-    }
-    private(set) var isAuthenticated: Bool {
-        didSet { delegate?.isUserAuthenticatedDidChange(isAuthenticated) }
-    }
-    private(set) var error: String? {
-        didSet { delegate?.errorDidChange(error) }
-    }
-    private(set) var isLoading: Bool = false {
-        didSet { delegate?.isLoadingChanged(isLoading) }
+        didSet { playlistDelegate?.searchResultsDidChange(searchResults) }
     }
     
-    init(cache: Cache, spotifyApi: SpotifyApi = SpotifyApi()) {
-        self.cache = cache
-        self.spotifyApi = spotifyApi
-        isAuthenticated = cache.userCredentials != nil
+    override init(cache: Cache, spotifyApi: SpotifyApi = SpotifyApi()) {
+        super.init(cache: cache, spotifyApi: spotifyApi)
     }
     
     func setPlaylist(playlist: Playlist?) {
@@ -55,82 +45,120 @@ final class PlaylistPresenter {
     }
     
     func loadTracks() {
+        // Get the playlist or clear the list if creating one
         guard let playlist = playlist else {
+            self.tracks = []
             return
         }
+        
+        // Set the loading state and get the tracks
         isLoading = true
         spotifyApi.getPlaylistTracks(playlistId: playlist.id) { pagingResponse in
-            let items = pagingResponse?.items ?? []
-            self.tracks = items
             self.isLoading = false
+            
+            // Show an error if the response is missing
+            guard let tracks = pagingResponse?.items else {
+                self.error = "Failed to load the tracks."
+                return
+            }
+            self.tracks = tracks
         }
      }
     
     func search(text: String) {
+        // Skip search if there is no text
         guard !text.isEmpty else {
             self.searchResults = []
             return
         }
         
+        // Cancel any previous search requests and begin loading
         currentSearchRequest?.cancel()
-        let cancellable = spotifyApi.searchTracks(searchTerm: text) { searchResponse in
-            self.searchResults = searchResponse?.tracks.items ?? []
+        isLoading = true
+        let request = spotifyApi.searchTracks(searchTerm: text) { searchResponse in
+            self.isLoading = false
+            
+            // Skip if the search was cancelled
+            guard let searchResults = searchResponse?.tracks.items else {
+                // TODO: self.error = "Failed to load the tracks." or cancelled
+                return
+            }
+            
+            // Remove the request from pending and store the results
+            self.searchResults = searchResults
             self.currentSearchRequest = nil
         }
-        currentSearchRequest = cancellable
+        currentSearchRequest = request
     }
     
     func addTrack(at index: Int, completion: @escaping (Bool) -> ()) {
+        // Get the playlist or create it
         guard let playlist = playlist else {
-            if let userId = cache.userId {
-                spotifyApi.createPlaylist(name: Strings.newPlaylistTitle.localized, userId: userId) { playlist in
-                    self.playlist = playlist
-                    self.addTrack(at: index, completion: completion)
-                    return
-                }
-            }
-            completion(false)
+            createPlaylist(withTrackAt: index, completion: completion)
             return
         }
         
-        
-        let trackUri = searchResults[index].uri
-        spotifyApi.addTracksToPlaylist(withId: playlist.id, uris: [trackUri]) { snapshot in
+        // Add the track to the playlist
+        let track = searchResults[index]
+        spotifyApi.addTracksToPlaylist(withId: playlist.id, uris: [track.uri]) { snapshot in
+            // Show an error if the response is missing
             guard snapshot != nil else {
                 completion(false)
+                // TODO: self.error = "Failed to add \(track.name) to the playlist."
                 return
             }
+            
+            // Reload the tracks to display it in the list
             self.loadTracks()
             completion(true)
         }
     }
     
+    func createPlaylist(withTrackAt index: Int, completion: @escaping (Bool) -> ()) {
+        guard let userId = cache.userId else {
+            completion(false)  // TODO: Fetch profile?
+            return
+        }
+        spotifyApi.createPlaylist(name: Strings.newPlaylistTitle.localized, userId: userId) { playlist in
+            // Show an error if the response is missing
+            guard let playlist = playlist else {
+                completion(false)
+                // TODO: self.error = "Failed to create the playlist."
+                return
+            }
+            // Store the new playlist and add the track
+            self.playlist = playlist
+            self.addTrack(at: index, completion: completion)
+            return
+        }
+    }
+    
     func removeTrack(at index: Int, completion: @escaping (Bool) -> ()) {
-        guard let playlist = playlist, let trackUri = tracks[index].track?.uri else {
+        // Assert the playlist and track exist
+        guard let playlist = playlist, let track = tracks[index].track else {
             completion(false)
             return
         }
         
-        spotifyApi.removeTracksFromPlaylist(withId: playlist.id, uris: [trackUri]) { snapshot in
+        // Remove the track from the playlist
+        spotifyApi.removeTracksFromPlaylist(withId: playlist.id, uris: [track.uri]) { snapshot in
+            
+            // Show an error if the response is missing
             guard snapshot != nil else {
+                // TODO: self.error = "Failed to remove \(track.name) from the playlist."
                 completion(false)
                 return
             }
             
-            guard let index = self.tracks.firstIndex(where: { $0.track?.uri == trackUri }) else {
+            // Assert the track still exists in the table data
+            guard let index = self.tracks.firstIndex(where: { $0.track?.uri == track.uri }) else {
                 completion(false)
                 return
             }
+            
+            // End the remove action and update the data source
             completion(true)
             self.tracks.remove(at: index)
         }
-    }
-}
-
-
-extension PlaylistPresenter: CacheDelegate {
-    
-    func userCredentialsDidChange(_ credentials: OAuthSwiftCredential?) {
-        isAuthenticated = credentials != nil
     }
 }

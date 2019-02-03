@@ -12,20 +12,18 @@ import SDWebImage
 import DZNEmptyDataSet
 import OAuthSwift
 
-final class PlaylistsViewController: UITableViewController {
+final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter> {
     
     // MARK: - Properties
     
-    private let presenter: PlaylistsPresenter
     private let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
     
     
     // MARK: - Lifecycle
     
-    init(presenter: PlaylistsPresenter) {
-        self.presenter = presenter
-        super.init(style: .grouped)
-        presenter.delegate = self
+    override init(presenter: PlaylistsPresenter) {
+        super.init(presenter: presenter)
+        presenter.playlistsDelegate = self
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -35,8 +33,27 @@ final class PlaylistsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         if presenter.isAuthenticated {
             presenter.fetchPlaylists()
+        }
+    }
+    
+    override func getEmptyStateConfig() -> EmptyStateConfig? {
+        if let config = super.getEmptyStateConfig() {
+            return config
+        } else if presenter.playlists.isEmpty {
+            var config = EmptyStateConfig()
+            config.state = .empty
+            config.title = Strings.playlistsEmptyTitle.localized.attributed
+            config.description = Strings.playlistsEmptyDescription.localized.attributed
+            config.buttonTitle = Strings.emptyPlaylistsButtonTitle.localized.attributed
+            return config
+        } else {
+            return nil
         }
     }
     
@@ -55,10 +72,6 @@ final class PlaylistsViewController: UITableViewController {
     
     
     // MARK: - Table Data Source
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return presenter.playlists.count
@@ -151,106 +164,64 @@ final class PlaylistsViewController: UITableViewController {
         let playlistViewController = PlaylistViewController(presenter: playlistPresenter)
         navigationController?.pushViewController(playlistViewController, animated: true)
     }
+    
+    
+    // MARK: - Base Presenter Delegate
+    
+    override func isUserAuthenticatedDidChange(_ isAuthenticated: Bool) {
+        addButton.isEnabled = true
+        isAuthenticated ? presenter.fetchPlaylists() : tableView.reloadEmptyDataSet()
+    }
+    
+    override func isLoadingChanged(_ isLoading: Bool) {
+        if presenter.playlists.isEmpty && isLoading {
+            tableView.reloadEmptyDataSet()
+        }
+    }
+    
+    
+    // MARK: - Empty State Delegate
+    
+    override func emptyDataSet(_ scrollView: UIScrollView!, didTap button: UIButton!) {
+        guard let state = getEmptyStateConfig()?.state else {
+            return
+        }
+        
+        switch state {
+        case .authenticationChallenge:
+            presenter.login(viewController: self)
+        case .error:
+            presenter.fetchPlaylists()
+        case .empty:
+            openPlaylist(playlist: nil)
+        default:
+            return
+        }
+    }
 }
+
+
+// MARK: - Presenter Delegate
 
 extension PlaylistsViewController: PlaylistsPresenterDelegate {
     
     func playlistsDidChange(_ playlists: [Playlist]) {
         tableView.refreshControl?.endRefreshing()
-        tableView.beginUpdates()
-        tableView.reloadSections(IndexSet(integer: 0), with: .fade)
-        tableView.endUpdates()
-    }
-    
-    func isUserAuthenticatedDidChange(_ isAuthenticated: Bool) {
-        addButton.isEnabled = true
-        presenter.fetchPlaylists()
+        
+        // Animate on first load
+        if tableView.numberOfRows(inSection: 0) == 0 {
+            tableView.beginUpdates()
+            tableView.reloadSections(IndexSet(integer: 0), with: .fade)
+            tableView.endUpdates()
+        } else {
+            tableView.reloadData()
+        }
     }
     
     func newPlaylistDidChange(_ playlist: Playlist?) {
         addButton.isEnabled = true
         if let playlist = playlist {
             openPlaylist(playlist: playlist)
-        }
-    }
-    
-    func errorDidChange(_ error: String?) {
-        tableView.reloadEmptyDataSet()
-    }
-    
-    func isLoadingChanged(_ isLoading: Bool) {
-        if presenter.playlists.isEmpty && isLoading {
-            tableView.reloadEmptyDataSet()
-        }
-    }
-}
-
-extension PlaylistsViewController: DZNEmptyDataSetSource {
-    
-    func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
-        if presenter.isLoading {
-            return "\n".attributed
-        } else if !presenter.isAuthenticated {
-            return Strings.loginRequiredTitle.localized.attributed
-        } else if presenter.error != nil {
-            return Strings.errorTitle.localized.attributed
-        } else {
-            return Strings.playlistsEmptyTitle.localized.attributed
-        }
-    }
-    
-    func description(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
-        if presenter.isLoading {
-            return "\n\n\n\n\n".attributed
-        } else if !presenter.isAuthenticated {
-            return Strings.loginRequiredDescription.localized.attributed
-        } else if let error = presenter.error {
-            return error.attributed
-        } else {
-            return Strings.playlistsEmptyDescription.localized.attributed
-        }
-    }
-    
-    func backgroundColor(forEmptyDataSet scrollView: UIScrollView!) -> UIColor! {
-        return tableView.backgroundColor
-    }
-    
-    func image(forEmptyDataSet scrollView: UIScrollView!) -> UIImage! {
-        if presenter.isLoading || !presenter.isAuthenticated {
-            let indices = [1, 2, 3, 2]
-            let images = indices.compactMap { UIImage(named: "LoadingIcon\($0)") }
-            return UIImage.animatedImage(with: images, duration: 0.5)
-        } else {
-            return nil
-        }
-    }
-    
-    func buttonTitle(forEmptyDataSet scrollView: UIScrollView!, for state: UIControl.State) -> NSAttributedString! {
-        if presenter.isLoading {
-            return nil
-        } else if !presenter.isAuthenticated {
-            return Strings.loginRequiredButtonTitle.localized.attributed
-        } else if presenter.error != nil {
-            return Strings.errorButtonTitle.localized.attributed
-        } else {
-            return Strings.emptyPlaylistsButtonTitle.localized.attributed
-        }
-    }
-}
-
-extension PlaylistsViewController: DZNEmptyDataSetDelegate {
-    
-    func emptyDataSetShouldAllowScroll(_ scrollView: UIScrollView!) -> Bool {
-        return presenter.isAuthenticated
-    }
-    
-    func emptyDataSet(_ scrollView: UIScrollView!, didTap button: UIButton!) {
-        if !presenter.isAuthenticated {
-            presenter.login(viewController: self)
-        } else if presenter.error != nil {
-            presenter.fetchPlaylists()
-        } else {
-            openPlaylist(playlist: nil)
         }
     }
 }

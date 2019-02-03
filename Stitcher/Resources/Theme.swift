@@ -38,6 +38,7 @@ extension Theme {
         UINavigationBar.appearance().largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : ternaryLightColor]
         UINavigationBar.appearance().prefersLargeTitles = true
         UILabel.appearance().textColor = ternaryLightColor
+        UILabel.appearance(whenContainedInInstancesOf: [UITableViewHeaderFooterView.self]).textColor = color(109, 109, 114)
         UINavigationBar.appearance().barTintColor = primaryDarkColor
         UINavigationBar.appearance().tintColor = ternaryLightColor
         UITableView.appearance().backgroundColor = ternaryColor

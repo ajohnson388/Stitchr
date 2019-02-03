@@ -10,75 +10,50 @@ import Foundation
 import UIKit
 import OAuthSwift
 
-protocol PlaylistsPresenterDelegate: class {
+protocol PlaylistsPresenterDelegate: BasePresenterDelegate {
     func playlistsDidChange(_ playlists: [Playlist])
-    func isUserAuthenticatedDidChange(_ isAuthenticated: Bool)
-    func errorDidChange(_ error: String?)
-    func isLoadingChanged(_ isLoading: Bool)
 }
 
-class PlaylistsPresenter {
+class PlaylistsPresenter: BasePresenter {
     
-    weak var delegate: PlaylistsPresenterDelegate?
-    
-    private let cache: Cache
-    private let spotifyApi: SpotifyApi
+    weak var playlistsDelegate: PlaylistsPresenterDelegate? {
+        didSet {
+            self.delegate = playlistsDelegate
+        }
+    }
     
     private(set) var playlists = [Playlist]() {
         didSet {
-            delegate?.playlistsDidChange(playlists)
-        }
-    }
-    private(set) var isAuthenticated: Bool {
-        didSet {
-            delegate?.isUserAuthenticatedDidChange(isAuthenticated)
-        }
-    }
-    private(set) var error: String? {
-        didSet {
-            delegate?.errorDidChange(error)
-        }
-    }
-    private(set) var isLoading: Bool = false {
-        didSet {
-            delegate?.isLoadingChanged(isLoading)
+            error = nil
+            playlistsDelegate?.playlistsDidChange(playlists)
         }
     }
     
-    init(cache: Cache, spotifyApi: SpotifyApi = SpotifyApi()) {
-        self.cache = cache
-        self.spotifyApi = spotifyApi
-        isAuthenticated = cache.userCredentials != nil
-    }
-    
-    func login(viewController: UIViewController) {
-        spotifyApi.authorize(viewController: viewController) { isAuthenticated in
-            guard isAuthenticated else {
-                self.isAuthenticated = false
-                return
-            }
-            
-            // Get the user profile now
-            self.spotifyApi.getUserProfile { profile in
-                self.cache.userId = profile?.id
-                self.isAuthenticated = true
-            }
-        }
+    override init(cache: Cache, spotifyApi: SpotifyApi) {
+        super.init(cache: cache, spotifyApi: spotifyApi)
     }
     
     func fetchPlaylists(offset: Int = 0, limit: Int = 20) {
         isLoading = true
+        error = nil
         spotifyApi.getPlaylists(offset: offset, limit: limit) { pagingResponse in
-            self.playlists = pagingResponse?.items ?? []
             self.isLoading = false
+            
+            // If the response is missing show an error
+            guard let pagingResponse = pagingResponse else {
+                self.error = "Failed to fetch playlists."
+                return
+            }
+            
+            // Update the playlists
+            self.playlists = self.filterPlaylists(pagingResponse.items)
         }
     }
-}
-
-
-extension PlaylistsPresenter: CacheDelegate {
     
-    func userCredentialsDidChange(_ credentials: OAuthSwiftCredential?) {
-        isAuthenticated = credentials != nil
+    private func filterPlaylists(_ playlists: [Playlist]) -> [Playlist] {
+        let userId = cache.userId
+        return playlists.filter {
+            return $0.owner.id == userId || $0.collaborative
+        }
     }
 }
