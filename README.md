@@ -1,6 +1,6 @@
 # Stitchr
 
-<!--![Stitchr](https://github.com/ajohnson388/DLParser-Swift/blob/master/images/Stitchr-Logo.png)-->
+[Stitchr](https://github.com/ajohnson388/DLParser-Swift/blob/master/images/Stitchr-Logo.png)
 
 > Stitchr is an iOS app for quickly creating or modifying playlists.
 
