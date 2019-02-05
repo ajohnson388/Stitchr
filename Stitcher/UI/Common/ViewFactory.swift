@@ -43,7 +43,7 @@ struct ViewFactory {
         cell.textLabel?.text = track?.name
         cell.detailTextLabel?.text = [track?.artists.first?.name, track?.album.name].compactMap({ $0 }).joined(separator: " • ")
         cell.imageView?.image = Images.imagePlaceholder.make()
-        cell.selectionStyle = .none
+        cell.selectionStyle = .gray
         cell.setOccurrences(occurrences)
         return cell
     }

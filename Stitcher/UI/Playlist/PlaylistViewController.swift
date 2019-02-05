@@ -127,6 +127,20 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
         return 58
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard !presenter.searchResults.isEmpty && isSearching else {
+            return
+        }
+        tableView.allowsSelection = false
+        presenter.addTrack(at: indexPath.row) { success in
+            tableView.allowsSelection = true
+            tableView.deselectRow(at: indexPath, animated: true)
+            if success {
+                tableView.reloadRows(at: [indexPath], with: .none)
+            }
+        }
+    }
+    
     
     // MARK: - Helper Functions
     
