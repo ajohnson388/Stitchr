@@ -46,7 +46,7 @@ Distributed under the Apache 2.0 license. See ``LICENSE`` for more information.
 [swift-image]:https://img.shields.io/badge/swift-4.2-orange.svg
 [swift-url]: https://swift.org/
 [test-coverage-image]:https://img.shields.io/badge/Coverage-80%25-orange.svg
-[license-image]: https://img.shields.io/badge/License-Apache-2.0-blue.svg
+[license-image]: https://img.shields.io/badge/License-Apache%202.0-blue.svg
 [license-url]: LICENSE
 [platform-image]:https://img.shields.io/badge/platform-iOS-green.svg?style=flat
 [platform-url]:https://developer.apple.com/
