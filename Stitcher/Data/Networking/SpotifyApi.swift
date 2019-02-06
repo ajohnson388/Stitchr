@@ -13,7 +13,7 @@ import SafariServices
 
 final class SpotifyApi {
     
-    private static let redirectUri = "com.meaningless.Stitcher://oauth"
+    private static let redirectUri = "com.andyjohnson.stitchr://oauth"
     private static let accountsBaseUrl = "https://accounts.spotify.com/"
     private static let apiBaseUrl = "https://api.spotify.com/v1/"
     private static let permissionScopes = [
