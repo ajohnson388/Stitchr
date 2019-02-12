@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Edit Playlist View Controller-->
+        <scene sceneID="gVe-Xu-xC9">
+            <objects>
+                <viewController storyboardIdentifier="EditPlaylistViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="5Tq-d6-nf3" customClass="EditPlaylistViewController" customModule="Stitcher" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ZRi-zd-ydy">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2mS-mH-vZA">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="New Playlist" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="994-8u-2hC">
+                                        <rect key="frame" x="16" y="8" width="343" height="39"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="32"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="YES"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="heroID" value="editPlaylistTransition"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </textField>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="994-8u-2hC" secondAttribute="trailing" constant="16" id="86o-LM-YC4"/>
+                                    <constraint firstItem="994-8u-2hC" firstAttribute="top" secondItem="2mS-mH-vZA" secondAttribute="top" constant="8" id="PLz-LT-O1c"/>
+                                    <constraint firstItem="994-8u-2hC" firstAttribute="leading" secondItem="2mS-mH-vZA" secondAttribute="leading" constant="16" id="gLw-NQ-E8T"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Zzv-Iy-gos" firstAttribute="trailing" secondItem="2mS-mH-vZA" secondAttribute="trailing" id="39I-5a-0rq"/>
+                            <constraint firstItem="Zzv-Iy-gos" firstAttribute="bottom" secondItem="2mS-mH-vZA" secondAttribute="bottom" id="86j-tg-Wb8"/>
+                            <constraint firstItem="2mS-mH-vZA" firstAttribute="leading" secondItem="Zzv-Iy-gos" secondAttribute="leading" id="Vx0-5R-To9"/>
+                            <constraint firstItem="2mS-mH-vZA" firstAttribute="top" secondItem="Zzv-Iy-gos" secondAttribute="top" id="onj-dx-qUB"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Zzv-Iy-gos"/>
+                    </view>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" translucent="NO" prompted="NO"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outlet property="containerView" destination="2mS-mH-vZA" id="6cf-9y-2ph"/>
+                        <outlet property="titleTextField" destination="994-8u-2hC" id="tvB-pC-RtC"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lVm-fC-KBP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-391.19999999999999" y="-31.03448275862069"/>
+        </scene>
+    </scenes>
+</document>

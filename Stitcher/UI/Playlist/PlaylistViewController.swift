@@ -18,6 +18,7 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
     
     // MARK: - Properties
     
+    private let editButton = UIBarButtonItem(image: Images.editIcon.make(), style: .plain, target: nil, action: nil)
     private var isSearching: Bool {
         let isSearchTextEmpty = navigationItem.searchController?.searchBar.text?.isEmpty ?? true
         let isSearchActive = navigationItem.searchController?.isActive ?? false
@@ -39,12 +40,14 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-        presenter.loadTracks()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         navigationItem.hidesSearchBarWhenScrolling = true
+        hero.isEnabled = false
+        navigationController?.hero.isEnabled = false
+        presenter.loadTracks()
     }
     
     override func getEmptyStateConfig() -> EmptyStateConfig? {
@@ -142,11 +145,49 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
     }
     
     
+    // MARK: - Button Actions
+    
+    @objc
+    func editButtonTapped() {
+        guard let navigationController = navigationController else {
+            return
+        }
+        
+        let transitionId = "editPlaylistTransition"
+        
+        // Configure first controller transition
+        hero.isEnabled = true
+        navigationController.hero.isEnabled = true
+        navigationController.navigationBar.hero.id = transitionId
+        navigationController.hero.navigationAnimationType = .autoReverse(presenting: .uncover(direction: .down))
+
+        // Configure second controller transition
+        let editPlaylistController = EditPlaylistViewController.make()
+        let cache = LocalCache()
+        let spotifyApi = SpotifyApi(cache: cache)
+        let editPresenter = EditPlaylistPresenter(cache: cache, spotifyApi: spotifyApi)
+        editPresenter.editPlaylistDelegate = editPlaylistController
+        editPresenter.playlist = presenter.playlist
+        editPlaylistController.presenter = editPresenter
+        editPlaylistController.delegate = self
+
+        
+        // Show the edit controller
+        navigationController.pushViewController(editPlaylistController, animated: true)
+    }
+    
+    
     // MARK: - Helper Functions
     
     private func setupView() {
+        // Setup the nav bar
+        editButton.target = self
+        editButton.action = #selector(editButtonTapped)
+        navigationItem.rightBarButtonItem = editButton
         navigationItem.title = presenter.playlist?.name ?? Strings.newPlaylistTitle.localized
         navigationItem.hidesSearchBarWhenScrolling = false
+        
+        // Setup search
         let searchController = UISearchController(searchResultsController: nil)
         searchController.delegate = self
         searchController.searchResultsUpdater = self
@@ -154,6 +195,8 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
         searchController.searchBar.placeholder = Strings.searchPlaceholder.localized
         navigationItem.searchController = searchController
         definesPresentationContext = true
+        
+        // Setup tableview
         tableView.emptyDataSetSource = self
         tableView.emptyDataSetDelegate = self
     }
@@ -221,5 +264,15 @@ extension PlaylistViewController: PlaylistPresenterDelegate {
     
     func searchResultsDidChange(_ tracks: [Track]) {
         tableView.reloadData()
+    }
+}
+
+
+// MARK: - Edit Playlist Delegate
+
+extension PlaylistViewController: EditPlaylistViewControllerDelegate {
+    
+    func playlistTitleDidChange(title: String) {
+        navigationItem.title = title
     }
 }

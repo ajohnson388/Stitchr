@@ -15,6 +15,7 @@ enum Images: String {
     case imagePlaceholder = "PlaceholderPhoto"
     case stitcherLogo = "StitcherLogo"
     case spotifyLogo = "SpotifyLogo"
+    case editIcon = "EditIcon"
     
     func make() -> UIImage {
         return UIImage(named: rawValue)!

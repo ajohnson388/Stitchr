@@ -63,7 +63,11 @@ final class PlaylistPresenter: BasePresenter {
             }
             self.tracks = tracks
         }
-     }
+    }
+    
+    func loadPlaylistTitle() {
+        spotifyApi
+    }
     
     func search(text: String) {
         // Skip search if there is no text

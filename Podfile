@@ -10,7 +10,8 @@ target 'Stitcher' do
   pod 'Alamofire', '~> 4.8'
   pod 'SDWebImage', '~> 4.4'
   pod 'OAuthSwift', '~> 1.2'
-  pod 'DZNEmptyDataSet' 
+  pod 'DZNEmptyDataSet'
+  pod 'Hero' 
 
   target 'StitcherTests' do
     inherit! :search_paths

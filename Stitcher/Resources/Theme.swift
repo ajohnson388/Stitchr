@@ -33,22 +33,28 @@ extension Theme {
     }
     
     func apply() {
+        // Buttons
+        UILabel.appearance(whenContainedInInstancesOf: [UIButton.self]).textColor = accentColor
         UIBarButtonItem.appearance().tintColor = ternaryLightColor
+        
+        // Navigation bar
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor : ternaryLightColor]
         UINavigationBar.appearance().largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : ternaryLightColor]
         UINavigationBar.appearance().prefersLargeTitles = true
-        UILabel.appearance().textColor = ternaryLightColor
-        UILabel.appearance(whenContainedInInstancesOf: [UITableViewHeaderFooterView.self]).textColor = color(109, 109, 114)
         UINavigationBar.appearance().barTintColor = primaryDarkColor
         UINavigationBar.appearance().tintColor = ternaryLightColor
+        UINavigationBar.appearance().isTranslucent = false
+
+        // Search bar
+        UISearchBar.appearance().barStyle = .black
+        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: ternaryLightColor]
+        
+        // Table view
         UITableView.appearance().backgroundColor = ternaryColor
         UITableViewCell.appearance().backgroundColor = ternaryLightColor
-        UISearchBar.appearance().barStyle = .black
-        UITextField.appearance().defaultTextAttributes = [NSAttributedString.Key.foregroundColor: ternaryLightColor]
-        UILabel.appearance(whenContainedInInstancesOf: [UIButton.self]).textColor = accentColor
-        UIButton.appearance().layer.cornerRadius = 3
-        UIButton.appearance().layer.borderColor = accentColor.cgColor
-        UIButton.appearance().layer.borderWidth = 1
+        
+        // Labels
+        UILabel.appearance(whenContainedInInstancesOf: [UITableViewHeaderFooterView.self]).textColor = color(109, 109, 114)
     }
     
     func apply(safariViewController: SFSafariViewController) {

@@ -87,6 +87,12 @@ final class SpotifyApi {
         _ = makeRequest(url: SpotifyApi.apiBaseUrl + "me", method: .GET, completion: completion)
     }
     
+    func getPlaylist(withId id: String, fields: [String]? = nil, completion: @escaping (Playlist?) -> ()) {
+        let url = SpotifyApi.apiBaseUrl + "playlists/\(id)"
+        let parameters = ["fields": fields?.joined(separator: ",")]
+        _ = makeRequest(url: url, method: .GET, parameters: parameters, completion: completion)
+    }
+    
     func getPlaylists(offset: Int = 0, limit: Int = 20, completion: @escaping (PagingResponse<Playlist>?) -> ()) {
         let url = SpotifyApi.apiBaseUrl + "me/playlists"
         let parameters = ["offset": offset, "limit": limit]
@@ -128,6 +134,12 @@ final class SpotifyApi {
         _ = makeRequest(url: url, method: .DELETE, body: parameters, completion: completion)
     }
     
+    func updatePlaylistName(withId id: String, name: String, completion: @escaping (Bool?) -> ()) {
+        let url = SpotifyApi.apiBaseUrl + "playlists/\(id)"
+        let parameters = ["name": name]
+        _ = makeRequest(url: url, method: .PUT, body: parameters, completion: completion)
+    }
+    
     private func makeRequest<T>(
         url: String, method: OAuthSwiftHTTPRequest.Method,
         parameters: OAuthSwift.Parameters? = nil, body: [String: Any]? = nil,
@@ -146,7 +158,8 @@ final class SpotifyApi {
                     completion(object)
             },
             failure: { error in
-                if error.errorCode == -11 {
+                print(error.errorUserInfo.keys)
+                if error.description.contains("Code=401") {
                     self.cache.isUserAuthorized = false
                     self.cache.userCredentials = nil
                 }
