@@ -149,13 +149,20 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        // Tracks cannot be selected only search results
         guard !presenter.searchResults.isEmpty && isSearching else {
             return
         }
-        tableView.allowsSelection = false
+        
+        // Start the loading indicator for the track
+        let cell = tableView.cellForRow(at: indexPath) as? SearchTableViewCell
+        cell?.setLoading(true)
+        
+        // Add the track
         presenter.addTrack(at: indexPath.row) { success in
-            tableView.allowsSelection = true
-            tableView.deselectRow(at: indexPath, animated: true)
+            cell?.setLoading(false)
             if success {
                 tableView.reloadRows(at: [indexPath], with: .none)
             }

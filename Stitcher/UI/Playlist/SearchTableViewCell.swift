@@ -16,7 +16,7 @@ final class SearchTableViewCell: UITableViewCell {
     
     private let holderView = UIView(frame: CGRect.null)
     private let countLabel = UILabel(frame: CGRect.null)
-    
+    private let activityIndicator = UIActivityIndicatorView(style: .gray)
     
     // MARK: - Initializers
     
@@ -54,5 +54,10 @@ final class SearchTableViewCell: UITableViewCell {
     func setOccurrences(_ occurrences: Int) {
         countLabel.text = occurrences > 0 ? "\(occurrences)" : nil
         holderView.isHidden = occurrences == 0
+    }
+    
+    func setLoading(_ isLoading: Bool) {
+        isLoading ? activityIndicator.startAnimating() : activityIndicator.stopAnimating()
+        accessoryView = isLoading ? activityIndicator : holderView
     }
 }
