@@ -143,16 +143,19 @@ final class SpotifyApi {
     func updatePlaylistName(withId id: String, name: String, completion: @escaping (Bool?) -> ()) {
         let url = SpotifyApi.apiBaseUrl + "playlists/\(id)"
         let parameters = ["name": name]
-        _ = makeRequest(url: url, method: .PUT, body: parameters, completion: completion)
+        _ = makeNoResponseRequest(url: url, method: .PUT, body: parameters, completion: completion)
     }
     
-    private func makeRequest<T>(
-        url: String, method: OAuthSwiftHTTPRequest.Method,
-        parameters: OAuthSwift.Parameters? = nil, body: [String: Any]? = nil,
+    
+    private func makeNoResponseRequest(
+        url: String,
+        method: OAuthSwiftHTTPRequest.Method,
+        parameters: OAuthSwift.Parameters? = nil,
+        body: [String: Any]? = nil,
         headers: [String: String]? = nil,
-        completion: @escaping (T?) -> ()) -> OAuthSwiftRequestHandle? where T: Decodable {
+        completion: @escaping (Bool?) -> ()) -> OAuthSwiftRequestHandle? {
         
-        let data = body == nil ? nil : try? JSONSerialization.data(withJSONObject: body as Any, options: [])
+        let data = makeData(body: body)
         return oAuth.startAuthorizedRequest(
             url,
             method: method,
@@ -160,17 +163,50 @@ final class SpotifyApi {
             headers: headers,
             body: data,
             success: { response in
-                    let object = T.decode(data: response.data)
-                    completion(object)
+                completion(true)
             },
             failure: { error in
-                if error.description.contains("Code=401") || error.description.contains("Code=400") {
-                    self.cache.isUserAuthorized = false
-                    self.cache.userCredentials = nil
-                }
-                Logger.log(error)
+                self.handleFailure(error: error)
                 completion(nil)
             }
         )
+    }
+    
+    private func makeRequest<T>(
+        url: String, method: OAuthSwiftHTTPRequest.Method,
+        parameters: OAuthSwift.Parameters? = nil,
+        body: [String: Any]? = nil,
+        headers: [String: String]? = nil,
+        isNoResponse: Bool = false,
+        completion: @escaping (T?) -> ()) -> OAuthSwiftRequestHandle? where T: Decodable {
+        
+        let data = makeData(body: body)
+        return oAuth.startAuthorizedRequest(
+            url,
+            method: method,
+            parameters: parameters ?? [:],
+            headers: headers,
+            body: data,
+            success: { response in
+                let object = T.decode(data: response.data)
+                completion(object)
+            },
+            failure: { error in
+                self.handleFailure(error: error)
+                completion(nil)
+            }
+        )
+    }
+    
+    private func makeData(body: [String: Any]?) -> Data? {
+        return body == nil ? nil : try? JSONSerialization.data(withJSONObject: body as Any, options: [])
+    }
+    
+    private func handleFailure(error: OAuthSwiftError) {
+        if error.description.contains("Code=401") || error.description.contains("Code=400") {
+            self.cache.isUserAuthorized = false
+            self.cache.userCredentials = nil
+        }
+        Logger.log(error)
     }
 }
