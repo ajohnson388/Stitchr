@@ -10,12 +10,15 @@
 
 Stitchr is A playlist editor for Spotify designed to make playlist editing painless.
 
+
+[![App Store][app-store-image]][app-store-url]
+
 ## Features
 
 - [x] Access to editable playlists
 - [x] Add or remove tracks from playlists
-- [ ] Change titles of playlists
-- [ ] Reorder tracks in playlists
+- [x] Change titles of playlists
+- [x] Reorder tracks in playlists
 
 ## Requirements
 
@@ -50,3 +53,5 @@ Distributed under the Apache 2.0 license. See ``LICENSE`` for more information.
 [license-url]: LICENSE
 [platform-image]:https://img.shields.io/badge/platform-iOS-green.svg?style=flat
 [platform-url]:https://developer.apple.com/
+[app-store-image]:https://github.com/ajohnson388/Stitcher/blob/master/images/App-Store-badge.png
+[app-store-url]:https://itunes.apple.com/us/app/stitchr/id1451642579?ls=1&mt=8
