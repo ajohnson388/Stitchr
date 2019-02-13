@@ -27,13 +27,35 @@ class EditPlaylistPresenter: BasePresenter {
     }
     
     func savePlaylistTitle(_ title: String?) {
-        guard let title = title, let playlistId = playlist?.id else {
+        guard let title = title else {
             editPlaylistDelegate?.playlistTitleDidSave(false)
+            return
+        }
+        
+        guard let playlistId = playlist?.id else {
+            createPlaylist(withTitle: title) { isSaved in
+                guard isSaved else {
+                    self.editPlaylistDelegate?.playlistTitleDidSave(false)
+                    return
+                }
+                self.savePlaylistTitle(title)
+            }
             return
         }
         
         spotifyApi.updatePlaylistName(withId: playlistId, name: title) { success in
             self.editPlaylistDelegate?.playlistTitleDidSave(true)
+        }
+    }
+    
+    func createPlaylist(withTitle title: String, completion: @escaping (Bool) -> ()) {
+        guard let userId = cache.userId else {
+            completion(false)
+            return
+        }
+        spotifyApi.createPlaylist(name: title, userId: userId) { playlist in
+            self.playlist = playlist
+            completion(playlist != nil)
         }
     }
 }

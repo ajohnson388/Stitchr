@@ -18,6 +18,7 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
     
     // MARK: - Properties
     
+    private var headerView: EditTableView?
     private let editButton = UIBarButtonItem(image: Images.editIcon.make(), style: .plain, target: nil, action: nil)
     private var isSearching: Bool {
         let isSearchTextEmpty = navigationItem.searchController?.searchBar.text?.isEmpty ?? true
@@ -76,6 +77,9 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
     // MARK: - Table Data Source
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard presenter.isAuthenticated else {
+            return 0
+        }
         return isSearching ? presenter.searchResults.count : presenter.tracks.count
     }
     
@@ -92,6 +96,20 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let track = isSearching ? presenter.searchResults[indexPath.row] : presenter.tracks[indexPath.row].track
         ViewFactory.loadImage(track?.album.images.last?.url, forCell: cell)
+    }
+    
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        presenter.reorderTrack(fromIndex: sourceIndexPath.row, toIndex: destinationIndexPath.row) { success in
+            
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .none
+    }
+    
+    override func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+        return false
     }
     
     
@@ -153,12 +171,9 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
             return
         }
         
-        let transitionId = "editPlaylistTransition"
-        
         // Configure first controller transition
         hero.isEnabled = true
         navigationController.hero.isEnabled = true
-        navigationController.navigationBar.hero.id = transitionId
         navigationController.hero.navigationAnimationType = .autoReverse(presenting: .uncover(direction: .down))
 
         // Configure second controller transition
@@ -201,6 +216,35 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
         tableView.emptyDataSetDelegate = self
     }
     
+    private var isReorderControlHidden: Bool {
+        get {
+            guard let view = tableView.tableHeaderView else {
+                return false
+            }
+            return view.isHidden
+        }
+        set {
+            let oldValue = isReorderControlHidden
+            guard !newValue else {
+                tableView.tableHeaderView?.isHidden = true
+                tableView.setEditing(false, animated: true)
+                if !oldValue {
+                    headerView?.editButtonView.setTitle(Strings.playlistReorderButtonTitle.localized, for: .normal)
+                }
+                return
+            }
+            guard let view = tableView.tableHeaderView else {
+                let view = EditTableView(width: tableView.frame.width)
+                view.delegate = self
+                tableView.tableHeaderView = view
+                headerView = view
+                return
+            }
+            view.isHidden = false
+            
+        }
+    }
+    
     
     // MARK: - Empty State Delegate
     
@@ -231,18 +275,19 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
     
     func didDismissSearchController(_ searchController: UISearchController) {
         tableView.reloadData()
+        isReorderControlHidden = presenter.tracks.count == 0
     }
     
     
     // MARK: - Base Presenter Delegate
     
     override func isUserAuthenticatedDidChange(_ isAuthenticated: Bool) {
-        isAuthenticated ? presenter.loadTracks() : tableView.reloadEmptyDataSet()
+        isAuthenticated ? presenter.loadTracks() : tableView.reloadData()
     }
     
     override func isLoadingChanged(_ isLoading: Bool) {
         if (presenter.tracks.isEmpty || presenter.searchResults.isEmpty) && isLoading {
-            tableView.reloadEmptyDataSet()
+            tableView.reloadData()
         }
     }
 }
@@ -260,9 +305,12 @@ extension PlaylistViewController: PlaylistPresenterDelegate {
         } else {
             tableView.reloadData()
         }
+        
+        isReorderControlHidden = tracks.count == 0 || isSearching
     }
     
     func searchResultsDidChange(_ tracks: [Track]) {
+        isReorderControlHidden = true
         tableView.reloadData()
     }
 }
@@ -274,5 +322,21 @@ extension PlaylistViewController: EditPlaylistViewControllerDelegate {
     
     func playlistTitleDidChange(title: String) {
         navigationItem.title = title
+    }
+}
+
+
+// MARK: - Edit Table Delegate
+
+extension PlaylistViewController: EditTableViewDelegate {
+    
+    func onEditButtonTapped(button: UIButton) {
+        // Animate the title change based on the table view editing state
+        let title = tableView.isEditing ? Strings.playlistReorderButtonTitle.localized : Strings.playlistCancelButtonTitle.localized
+        UIView.transition(with: button, duration: 0.2, options: .transitionCrossDissolve, animations: {
+            button.setTitle(title, for: .normal)
+        }, completion: { _ in
+            self.tableView.setEditing(!self.tableView.isEditing, animated: true)
+        })
     }
 }

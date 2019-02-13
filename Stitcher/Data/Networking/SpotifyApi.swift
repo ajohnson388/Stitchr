@@ -134,6 +134,12 @@ final class SpotifyApi {
         _ = makeRequest(url: url, method: .DELETE, body: parameters, completion: completion)
     }
     
+    func reorderTracksInPlaylist(withId id: String, fromIndex: Int, toIndex: Int, completion: @escaping (SnapshotResponse?) -> ()) {
+        let url = SpotifyApi.apiBaseUrl + "playlists/\(id)/tracks"
+        let parameters = ["range_start": fromIndex, "insert_before": toIndex]
+        _ = makeRequest(url: url, method: .PUT, body: parameters, completion: completion)
+    }
+    
     func updatePlaylistName(withId id: String, name: String, completion: @escaping (Bool?) -> ()) {
         let url = SpotifyApi.apiBaseUrl + "playlists/\(id)"
         let parameters = ["name": name]
@@ -158,8 +164,7 @@ final class SpotifyApi {
                     completion(object)
             },
             failure: { error in
-                print(error.errorUserInfo.keys)
-                if error.description.contains("Code=401") {
+                if error.description.contains("Code=401") || error.description.contains("Code=400") {
                     self.cache.isUserAuthorized = false
                     self.cache.userCredentials = nil
                 }

@@ -64,6 +64,11 @@ class BaseTableViewController<T>: UITableViewController, DZNEmptyDataSetSource,
         return 1
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tableView.delaysContentTouches = false
+    }
+    
     
     // MARK: - Empty Delegate
     
@@ -95,6 +100,11 @@ class BaseTableViewController<T>: UITableViewController, DZNEmptyDataSetSource,
     }
     
     func buttonTitle(forEmptyDataSet scrollView: UIScrollView!, for state: UIControl.State) -> NSAttributedString! {
-        return getEmptyStateConfig()?.buttonTitle
+        guard let title = getEmptyStateConfig()?.buttonTitle?.string else {
+            return nil
+        }
+        let color = Themes.current.accentColor
+        let textColor = [NSAttributedString.Key.foregroundColor: state == .highlighted ? color.withAlphaComponent(0.2) : color]
+        return NSAttributedString(string: title, attributes: textColor)
     }
 }

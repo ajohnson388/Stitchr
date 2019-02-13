@@ -33,3 +33,6 @@
 
 "searchResultsEmptyTitle" = "No Results for ";
 "searchResultsDescription" = "Try searching something different.";
+
+"playlistReorderButtonTitle" = "Reorder";
+"playlistCancelButtonTitle" = "Cancel";

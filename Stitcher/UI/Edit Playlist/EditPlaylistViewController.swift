@@ -9,7 +9,6 @@
 import Foundation
 import UIKit
 import Hero
-import Anchorage
 
 protocol EditPlaylistViewControllerDelegate: class {
     func playlistTitleDidChange(title: String)
@@ -18,8 +17,6 @@ protocol EditPlaylistViewControllerDelegate: class {
 final class EditPlaylistViewController: UIViewController {
     
     // MARK: - Properties
-    
-    static let transitionId = "editPlaylistTransition"
     
     weak var delegate: EditPlaylistViewControllerDelegate?
     var presenter: EditPlaylistPresenter!
@@ -53,7 +50,7 @@ final class EditPlaylistViewController: UIViewController {
     private func setupView() {
         containerView.backgroundColor = Themes.current.primaryDarkColor
         navigationItem.largeTitleDisplayMode = .never
-        titleTextField.text = presenter.playlist?.name
+        titleTextField.text = presenter.playlist?.name ?? Strings.newPlaylistTitle.localized
         
         let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(didTapCancel(_:)))
         let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(didTapSave(_:)))

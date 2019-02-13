@@ -12,6 +12,7 @@
 		422E8D0022010D160069BF1B /* BasePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E8CFF22010D160069BF1B /* BasePresenter.swift */; };
 		422E8D02220365A00069BF1B /* EmptyStateConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E8D01220365A00069BF1B /* EmptyStateConfig.swift */; };
 		422E8D06220384380069BF1B /* BaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E8D05220384380069BF1B /* BaseTableViewController.swift */; };
+		423283732213ABA2009A6C30 /* EditTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 423283722213ABA2009A6C30 /* EditTableView.swift */; };
 		424EFF1821F8DB2C00DDB4E5 /* SpotifyApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424EFF1721F8DB2C00DDB4E5 /* SpotifyApi.swift */; };
 		424EFF1E21F8E1F700DDB4E5 /* TokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424EFF1D21F8E1F700DDB4E5 /* TokenResponse.swift */; };
 		424EFF2021F8E3D600DDB4E5 /* Codable+Conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424EFF1F21F8E3D600DDB4E5 /* Codable+Conversion.swift */; };
@@ -84,6 +85,7 @@
 		422E8CFF22010D160069BF1B /* BasePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasePresenter.swift; sourceTree = "<group>"; };
 		422E8D01220365A00069BF1B /* EmptyStateConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateConfig.swift; sourceTree = "<group>"; };
 		422E8D05220384380069BF1B /* BaseTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewController.swift; sourceTree = "<group>"; };
+		423283722213ABA2009A6C30 /* EditTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTableView.swift; sourceTree = "<group>"; };
 		424EFF1721F8DB2C00DDB4E5 /* SpotifyApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyApi.swift; sourceTree = "<group>"; };
 		424EFF1D21F8E1F700DDB4E5 /* TokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenResponse.swift; sourceTree = "<group>"; };
 		424EFF1F21F8E3D600DDB4E5 /* Codable+Conversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Codable+Conversion.swift"; sourceTree = "<group>"; };
@@ -177,6 +179,7 @@
 				422E8D01220365A00069BF1B /* EmptyStateConfig.swift */,
 				422E8CFF22010D160069BF1B /* BasePresenter.swift */,
 				42DCE73121FCF01D00218637 /* ViewFactory.swift */,
+				423283722213ABA2009A6C30 /* EditTableView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -609,6 +612,7 @@
 				424EFF2021F8E3D600DDB4E5 /* Codable+Conversion.swift in Sources */,
 				42AEA87121FFE33300B59EC6 /* Collection+Count.swift in Sources */,
 				42757BB72211E2E400576D71 /* EditPlaylistViewController.swift in Sources */,
+				423283732213ABA2009A6C30 /* EditTableView.swift in Sources */,
 				42EA313221FB9BFE00A6E9F0 /* ExternalIds.swift in Sources */,
 				42AEA87E2200B48200B59EC6 /* CacheDelegate.swift in Sources */,
 				42EA312C21FB9B3E00A6E9F0 /* Track.swift in Sources */,

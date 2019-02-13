@@ -120,7 +120,7 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
     }
     
     private func setupNavBar() {
-        navigationItem.title = "Playlists"
+        navigationItem.title = Strings.playlistsTitle.localized
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     

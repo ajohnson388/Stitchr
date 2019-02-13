@@ -165,4 +165,28 @@ final class PlaylistPresenter: BasePresenter {
             self.tracks.remove(at: index)
         }
     }
+    
+    func reorderTrack(fromIndex: Int, toIndex: Int, completion: @escaping (Bool) -> ()) {
+        // Assert the playlist and track exist
+        guard let playlist = playlist, fromIndex != toIndex else {
+            completion(false)
+            return
+        }
+        
+        // Remove the track from the playlist
+        spotifyApi.reorderTracksInPlaylist(withId: playlist.id, fromIndex: fromIndex, toIndex: toIndex) { snapshot in
+            
+            // Show an error if the response is missing
+            guard snapshot != nil else {
+                // TODO: self.error = "Failed to remove \(track.name) from the playlist."
+                completion(false)
+                return
+            }
+            
+            // Update the model
+            let track = self.tracks.remove(at: fromIndex)
+            self.tracks.insert(track, at: toIndex)
+            completion(true)
+        }
+    }
 }
