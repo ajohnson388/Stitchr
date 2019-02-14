@@ -174,7 +174,8 @@ final class PlaylistPresenter: BasePresenter {
         }
         
         // Remove the track from the playlist
-        spotifyApi.reorderTracksInPlaylist(withId: playlist.id, fromIndex: fromIndex, toIndex: toIndex) { snapshot in
+        let spotifyToIndex = toIndex > fromIndex ? toIndex + 1 : toIndex
+        spotifyApi.reorderTracksInPlaylist(withId: playlist.id, fromIndex: fromIndex, toIndex: spotifyToIndex) { snapshot in
             
             // Show an error if the response is missing
             guard snapshot != nil else {
