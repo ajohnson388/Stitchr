@@ -41,6 +41,7 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        presenter.loadTracks()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -48,7 +49,6 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
         navigationItem.hidesSearchBarWhenScrolling = true
         hero.isEnabled = false
         navigationController?.hero.isEnabled = false
-        presenter.loadTracks()
     }
     
     override func getEmptyStateConfig() -> EmptyStateConfig? {

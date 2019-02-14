@@ -14,7 +14,7 @@ struct Playlist: Codable {
     let href: String
     let id: String
     let images: [Image]
-    let name: String
+    var name: String
     let owner: Owner
     let itemPublic: Bool?
     let snapshotID: String?

@@ -32,6 +32,12 @@ class EditPlaylistPresenter: BasePresenter {
             return
         }
         
+        guard title != playlist?.name else {
+            editPlaylistDelegate?.playlistTitleDidSave(true)
+            return
+        }
+        
+        playlist?.name = title
         guard let playlistId = playlist?.id else {
             createPlaylist(withTitle: title) { isSaved in
                 guard isSaved else {

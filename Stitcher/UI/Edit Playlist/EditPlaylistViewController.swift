@@ -24,6 +24,9 @@ final class EditPlaylistViewController: UIViewController {
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var containerView: UIView!
     
+    let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(didTapCancel(_:)))
+    let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(didTapSave(_:)))
+    
     
     // MARK: - Lifecycle
     
@@ -52,8 +55,6 @@ final class EditPlaylistViewController: UIViewController {
         navigationItem.largeTitleDisplayMode = .never
         titleTextField.text = presenter.playlist?.name ?? Strings.newPlaylistTitle.localized
         
-        let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(didTapCancel(_:)))
-        let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(didTapSave(_:)))
         navigationItem.leftBarButtonItem = cancelButton
         navigationItem.rightBarButtonItem = saveButton
         navigationItem.hidesBackButton = true
@@ -66,6 +67,7 @@ final class EditPlaylistViewController: UIViewController {
     
     @objc
     func didTapSave(_ sender: UIBarButtonItem) {
+        saveButton.isEnabled = false
         presenter.savePlaylistTitle(titleTextField.text)
     }
 }
@@ -88,6 +90,7 @@ extension EditPlaylistViewController: EditPlaylistPresenterDelegate {
     }
     
     func playlistTitleDidSave(_ isSaved: Bool) {
+        saveButton.isEnabled = true
         if isSaved {
             delegate?.playlistTitleDidChange(title: titleTextField.text ?? "")
             navigationController?.popViewController(animated: true)
