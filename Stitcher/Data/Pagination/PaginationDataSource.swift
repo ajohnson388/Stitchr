@@ -24,7 +24,7 @@ class PaginationDataSource<T> {
     
     // MARK: - Properties
     
-    var batchSize: Int = 11
+    var batchSize: Int = 20
     
     private var nextStartIndex: Int = 0
     private var isExhausted = false
