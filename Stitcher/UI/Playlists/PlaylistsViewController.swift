@@ -38,14 +38,14 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if presenter.isAuthenticated {
-            presenter.fetchPlaylists()
+            presenter.playlistsDataSource.refresh()
         }
     }
     
     override func getEmptyStateConfig() -> EmptyStateConfig? {
         if let config = super.getEmptyStateConfig() {
             return config
-        } else if presenter.playlists.isEmpty {
+        } else if presenter.playlistsDataSource.items.isEmpty {
             var config = EmptyStateConfig()
             config.state = .empty
             config.title = Strings.playlistsEmptyTitle.localized.attributed
@@ -67,23 +67,26 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
     
     @objc
     private func didRefreshTable(_ refreshControl: UIRefreshControl) {
-        presenter.fetchPlaylists()
+        presenter.playlistsDataSource.refresh()
     }
     
     
     // MARK: - Table Data Source
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return presenter.playlists.count
+        return presenter.playlistsDataSource.items.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let playlist = presenter.playlists[indexPath.row]
+        let playlist = presenter.playlistsDataSource.items[indexPath.row]
         return ViewFactory.makePlaylistTableViewCell(tableView, indexPath: indexPath, playlist: playlist)
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        ViewFactory.loadImage(presenter.playlists[indexPath.row].images.last?.url, forCell: cell)
+        ViewFactory.loadImage(presenter.playlistsDataSource.items[indexPath.row].images.last?.url, forCell: cell)
+        if indexPath.row == tableView.numberOfRows(inSection: 0) - 1 {
+            presenter.playlistsDataSource.loadMoreIfNeeded()
+        }
     }
     
     
@@ -93,7 +96,7 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
         tableView.deselectRow(at: indexPath, animated: true)
         
         // Navigate to the playlist
-        let playlist = presenter.playlists[indexPath.row]
+        let playlist = presenter.playlistsDataSource.items[indexPath.row]
         openPlaylist(playlist: playlist)
     }
     
@@ -170,11 +173,11 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
     
     override func isUserAuthenticatedDidChange(_ isAuthenticated: Bool) {
         addButton.isEnabled = true
-        isAuthenticated ? presenter.fetchPlaylists() : tableView.reloadEmptyDataSet()
+        isAuthenticated ? presenter.playlistsDataSource.refresh() : tableView.reloadEmptyDataSet()
     }
     
     override func isLoadingChanged(_ isLoading: Bool) {
-        if presenter.playlists.isEmpty && isLoading {
+        if presenter.playlistsDataSource.items.isEmpty && isLoading {
             tableView.reloadEmptyDataSet()
         }
     }
@@ -191,7 +194,7 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
         case .authenticationChallenge:
             presenter.login(viewController: self)
         case .error:
-            presenter.fetchPlaylists()
+            presenter.playlistsDataSource.refresh()
         case .empty:
             openPlaylist(playlist: nil)
         default:

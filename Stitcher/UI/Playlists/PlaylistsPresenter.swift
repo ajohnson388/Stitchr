@@ -22,35 +22,43 @@ class PlaylistsPresenter: BasePresenter {
         }
     }
     
-    private(set) var playlists = [Playlist]() {
-        didSet {
-            error = nil
-            playlistsDelegate?.playlistsDidChange(playlists)
-        }
-    }
+    let playlistsDataSource = PlaylistsDataSource()
+    private let playlistsBatchSize = 30
+    private var nextStartIndex = 0
     
     override init(cache: Cache, spotifyApi: SpotifyApi) {
         super.init(cache: cache, spotifyApi: spotifyApi)
+        playlistsDataSource.delegate = self
     }
+}
+
+
+extension PlaylistsPresenter: PlaylistsDataSourceDelegate {
     
-    func fetchPlaylists(offset: Int = 0, limit: Int = 20) {
-        isLoading = true
+    func fetchItems(startIndex: Int, amount: Int, completion: @escaping (PagerResult<Playlist>) -> ()) {
+        isLoading = startIndex == 0  // Only show empty loading screen if not doing a paging fetch
         error = nil
-        spotifyApi.getPlaylists(offset: offset, limit: limit) { pagingResponse in
+        spotifyApi.getPlaylists(offset: startIndex, limit: amount) { pagingResponse in
             self.isLoading = false
             
             // If the response is missing show an error
             guard let pagingResponse = pagingResponse else {
                 self.error = "Failed to fetch playlists."
+                completion(.error)
                 return
             }
             
             // Update the playlists
-            self.playlists = self.filterPlaylists(pagingResponse.items)
+            let result = PagerResult.success(items: self.filterPlaylists(pagingResponse.items))
+            completion(result)
         }
     }
     
-    private func filterPlaylists(_ playlists: [Playlist]) -> [Playlist] {
+    func itemsDidUpdate(_ items: [Playlist]) {
+        playlistsDelegate?.playlistsDidChange(items)
+    }
+    
+    func filterPlaylists(_ playlists: [Playlist]) -> [Playlist] {
         let userId = cache.userId
         return playlists.filter {
             return $0.owner.id == userId || $0.collaborative

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		185872DF9970AABF3B98F9B6 /* Pods_StitcherTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F883D4210A32E56CA63AF017 /* Pods_StitcherTests.framework */; };
+		422D189822262432009321B8 /* PaginationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422D189722262432009321B8 /* PaginationDataSource.swift */; };
+		422D189A2226D74F009321B8 /* PlaylistsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422D18992226D74F009321B8 /* PlaylistsDataSource.swift */; };
 		422E8CFE2200FC770069BF1B /* Cancellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E8CFD2200FC770069BF1B /* Cancellable.swift */; };
 		422E8D0022010D160069BF1B /* BasePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E8CFF22010D160069BF1B /* BasePresenter.swift */; };
 		422E8D02220365A00069BF1B /* EmptyStateConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E8D01220365A00069BF1B /* EmptyStateConfig.swift */; };
@@ -81,6 +83,8 @@
 		099F734F4D3D8B4CF45C3B3A /* Pods-StitcherUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StitcherUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-StitcherUITests/Pods-StitcherUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		1DFBDE42F6027E791AF59F79 /* Pods-StitcherTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StitcherTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-StitcherTests/Pods-StitcherTests.debug.xcconfig"; sourceTree = "<group>"; };
 		259D5FC17BDA19BBCEE67BDE /* Pods-Stitcher.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stitcher.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Stitcher/Pods-Stitcher.debug.xcconfig"; sourceTree = "<group>"; };
+		422D189722262432009321B8 /* PaginationDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginationDataSource.swift; sourceTree = "<group>"; };
+		422D18992226D74F009321B8 /* PlaylistsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsDataSource.swift; sourceTree = "<group>"; };
 		422E8CFD2200FC770069BF1B /* Cancellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cancellable.swift; sourceTree = "<group>"; };
 		422E8CFF22010D160069BF1B /* BasePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasePresenter.swift; sourceTree = "<group>"; };
 		422E8D01220365A00069BF1B /* EmptyStateConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateConfig.swift; sourceTree = "<group>"; };
@@ -172,6 +176,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		422D18962226241B009321B8 /* Pagination */ = {
+			isa = PBXGroup;
+			children = (
+				422D189722262432009321B8 /* PaginationDataSource.swift */,
+				422D18992226D74F009321B8 /* PlaylistsDataSource.swift */,
+			);
+			path = Pagination;
+			sourceTree = "<group>";
+		};
 		422E8D072203894F0069BF1B /* Common */ = {
 			isa = PBXGroup;
 			children = (
@@ -187,6 +200,7 @@
 		424EFF1521F8DB0B00DDB4E5 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				422D18962226241B009321B8 /* Pagination */,
 				424EFF3121F93A5200DDB4E5 /* Caching */,
 				424EFF2521F8ED8500DDB4E5 /* Models */,
 				424EFF1621F8DB1300DDB4E5 /* Networking */,
@@ -622,6 +636,7 @@
 				424EFF2E21F913F100DDB4E5 /* SnapshotResponse.swift in Sources */,
 				424EFF3521F94B0C00DDB4E5 /* Tracks.swift in Sources */,
 				424EFF2C21F912BA00DDB4E5 /* Playlist.swift in Sources */,
+				422D189822262432009321B8 /* PaginationDataSource.swift in Sources */,
 				42EA313821FBB3B600A6E9F0 /* SearchResponse.swift in Sources */,
 				424EFF2821F907D700DDB4E5 /* UserProfile.swift in Sources */,
 				424EFF3E21F965C100DDB4E5 /* PlaylistsViewController.swift in Sources */,
@@ -646,6 +661,7 @@
 				42EA312521FB864600A6E9F0 /* Theme.swift in Sources */,
 				424EFF4121F9690C00DDB4E5 /* PlaylistsPresenter.swift in Sources */,
 				42757BB92211E31700576D71 /* EditPlaylistPresenter.swift in Sources */,
+				422D189A2226D74F009321B8 /* PlaylistsDataSource.swift in Sources */,
 				424EFF1E21F8E1F700DDB4E5 /* TokenResponse.swift in Sources */,
 				422E8D02220365A00069BF1B /* EmptyStateConfig.swift in Sources */,
 				42EA313021FB9BB300A6E9F0 /* Album.swift in Sources */,
