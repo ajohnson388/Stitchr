@@ -162,6 +162,10 @@ final class SpotifyApi {
             parameters: parameters ?? [:],
             headers: headers,
             body: data,
+            onTokenRenewal: { credentials in
+                self.cache.isUserAuthorized = true
+                self.cache.userCredentials = credentials
+            },
             success: { response in
                 completion(true)
             },
@@ -203,10 +207,14 @@ final class SpotifyApi {
     }
     
     private func handleFailure(error: OAuthSwiftError) {
-        if error.description.contains("Code=401") || error.description.contains("Code=400") {
+        switch error {
+        case .missingToken:
             self.cache.isUserAuthorized = false
             self.cache.userCredentials = nil
+        case .requestError(let error, let request):
+            Logger.log(error)
+        default:
+            break
         }
-        Logger.log(error)
     }
 }

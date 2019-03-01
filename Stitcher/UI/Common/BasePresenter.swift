@@ -26,6 +26,9 @@ class BasePresenter: NSObject {
     
     internal(set) var isAuthenticated: Bool {
         didSet {
+            guard oldValue != isAuthenticated else {
+                return
+            }
             delegate?.isUserAuthenticatedDidChange(isAuthenticated)
         }
     }
