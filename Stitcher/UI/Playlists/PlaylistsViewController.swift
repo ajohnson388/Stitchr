@@ -12,7 +12,7 @@ import SDWebImage
 import DZNEmptyDataSet
 import OAuthSwift
 
-final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter> {
+final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>, UIViewControllerPreviewingDelegate {
     
     // MARK: - Properties
     
@@ -108,6 +108,15 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
         setupNavBar()
         setupLogoImage()
         setupTableView()
+        setupPeekAndPop()
+    }
+    
+    private func setupPeekAndPop() {
+        // Assert 3D touch is available
+        guard traitCollection.forceTouchCapability == .available else {
+            return
+        }
+        registerForPreviewing(with: self, sourceView: view)
     }
     
     private func setupAddButton() {
@@ -158,13 +167,17 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
     
     // MARK: - Helper Functions
     
-    private func openPlaylist(playlist: Playlist?) {
+    private func makePlaylistViewController(playlist: Playlist?) -> PlaylistViewController {
         let cache = LocalCache()
         let spotifyApi = SpotifyApi(cache: cache)
         let playlistPresenter = PlaylistPresenter(cache: cache, spotifyApi: spotifyApi)
         cache.delegate = playlistPresenter
         playlistPresenter.setPlaylist(playlist: playlist)
-        let playlistViewController = PlaylistViewController(presenter: playlistPresenter)
+        return PlaylistViewController(presenter: playlistPresenter)
+    }
+    
+    private func openPlaylist(playlist: Playlist?) {
+        let playlistViewController = makePlaylistViewController(playlist: playlist)
         navigationController?.pushViewController(playlistViewController, animated: true)
     }
     
@@ -200,6 +213,23 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
         default:
             return
         }
+    }
+    
+    
+    // MARK: - Peek and Pop
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        guard let indexPath = tableView.indexPathForRow(at: location) else {
+            return nil
+        }
+        previewingContext.sourceRect = tableView.rectForRow(at: indexPath)
+        
+        let playlist = presenter.playlistsDataSource.items[indexPath.row]
+        return makePlaylistViewController(playlist: playlist)
+    }
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        navigationController?.pushViewController(viewControllerToCommit, animated: true)
     }
 }
 
