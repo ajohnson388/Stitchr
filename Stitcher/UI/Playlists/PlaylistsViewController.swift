@@ -176,9 +176,9 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
         return PlaylistViewController(presenter: playlistPresenter)
     }
     
-    private func openPlaylist(playlist: Playlist?) {
+    func openPlaylist(playlist: Playlist?, animated: Bool = true) {
         let playlistViewController = makePlaylistViewController(playlist: playlist)
-        navigationController?.pushViewController(playlistViewController, animated: true)
+        navigationController?.pushViewController(playlistViewController, animated: animated)
     }
     
     

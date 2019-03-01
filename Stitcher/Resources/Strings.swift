@@ -31,6 +31,7 @@ enum Strings: String {
     case searchResultsDescription
     case playlistReorderButtonTitle
     case playlistCancelButtonTitle
+    case createPlaylistShortcutTitle
     
     var localized: String {
         return NSLocalizedString(rawValue, comment: "")

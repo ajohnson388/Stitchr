@@ -36,3 +36,6 @@
 
 "playlistReorderButtonTitle" = "Reorder";
 "playlistCancelButtonTitle" = "Cancel";
+
+// Shortcuts
+"createPlaylistShortcutTitle" = "Create Playlist";
