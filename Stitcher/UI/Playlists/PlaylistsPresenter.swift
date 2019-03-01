@@ -49,7 +49,7 @@ extension PlaylistsPresenter: PlaylistsDataSourceDelegate {
             }
             
             // Update the playlists
-            let result = PagerResult.success(items: self.filterPlaylists(pagingResponse.items))
+            let result = PagerResult.success(items: pagingResponse.items)
             completion(result)
         }
     }
@@ -58,9 +58,9 @@ extension PlaylistsPresenter: PlaylistsDataSourceDelegate {
         playlistsDelegate?.playlistsDidChange(items)
     }
     
-    func filterPlaylists(_ playlists: [Playlist]) -> [Playlist] {
+    func filterItems(_ items: [Playlist]) -> [Playlist] {
         let userId = cache.userId
-        return playlists.filter {
+        return items.filter {
             return $0.owner.id == userId || $0.collaborative
         }
     }

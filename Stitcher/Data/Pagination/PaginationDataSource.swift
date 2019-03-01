@@ -37,6 +37,18 @@ class PaginationDataSource<T> {
     
     // MARK: - Control Methods
     
+    func removeItem(at index: Int) {
+        _ = items.remove(at: index)
+        if nextStartIndex > 0 {
+            nextStartIndex -= 1
+        }
+    }
+    
+    func moveItem(from fromIndex: Int, to toIndex: Int) {
+        let item = items.remove(at: fromIndex)
+        items.insert(item, at: toIndex)
+    }
+    
     func refresh() {
         nextStartIndex = 0
         isExhausted = false

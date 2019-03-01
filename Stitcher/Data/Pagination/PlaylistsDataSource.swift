@@ -11,7 +11,7 @@ import Foundation
 protocol PlaylistsDataSourceDelegate: class {
     func fetchItems(startIndex: Int, amount: Int, completion: @escaping (PagerResult<Playlist>) -> ())
     func itemsDidUpdate(_ items: [Playlist])
-    func filterPlaylists(_ playlists: [Playlist]) -> [Playlist]
+    func filterItems(_ items: [Playlist]) -> [Playlist]
 }
 
 final class PlaylistsDataSource: PaginationDataSource<Playlist> {
@@ -27,6 +27,6 @@ final class PlaylistsDataSource: PaginationDataSource<Playlist> {
     }
     
     override func filterItems(_ items: [Playlist]) -> [Playlist] {
-        return delegate?.filterPlaylists(items) ?? []
+        return delegate?.filterItems(items) ?? []
     }
 }

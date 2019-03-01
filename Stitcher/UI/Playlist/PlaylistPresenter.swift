@@ -15,7 +15,10 @@ protocol PlaylistPresenterDelegate: BasePresenterDelegate {
 }
 
 final class PlaylistPresenter: BasePresenter {
-    
+
+    let tracksDataSource = TracksDataSource()
+    let searchDataSource = SearchDataSource()
+    var playlist: Playlist?
     weak var playlistDelegate: PlaylistPresenterDelegate? {
         didSet {
             self.delegate = playlistDelegate
@@ -23,76 +26,22 @@ final class PlaylistPresenter: BasePresenter {
     }
     
     private var currentSearchRequest: Cancellable?
-    var playlist: Playlist?
-    
-    
-    private(set) var tracks: [TrackItem] = [] {
-        didSet {
-            error = nil
-            playlistDelegate?.tracksDidChange(tracks)
-        }
-    }
-    private(set) var searchResults: [Track] = [] {
-        didSet { playlistDelegate?.searchResultsDidChange(searchResults) }
-    }
+    private var searchText: String?
     
     override init(cache: Cache, spotifyApi: SpotifyApi = SpotifyApi()) {
         super.init(cache: cache, spotifyApi: spotifyApi)
+        tracksDataSource.batchSize = 30
+        tracksDataSource.delegate = self
+        searchDataSource.delegate = self
     }
     
     func setPlaylist(playlist: Playlist?) {
         self.playlist = playlist
     }
     
-    func loadTracks() {
-        // Get the playlist or clear the list if creating one
-        guard let playlist = playlist else {
-            self.tracks = []
-            return
-        }
-        
-        // Set the loading state and get the tracks
-        isLoading = true
-        spotifyApi.getPlaylistTracks(playlistId: playlist.id) { pagingResponse in
-            self.isLoading = false
-            
-            // Show an error if the response is missing
-            guard let tracks = pagingResponse?.items else {
-                self.error = "Failed to load the tracks."
-                return
-            }
-            self.tracks = tracks
-        }
-    }
-    
-    func loadPlaylistTitle() {
-        spotifyApi
-    }
-    
-    func search(text: String) {
-        // Skip search if there is no text
-        guard !text.isEmpty else {
-            self.searchResults = []
-            return
-        }
-        
-        // Cancel any previous search requests and begin loading
-        currentSearchRequest?.cancel()
-        isLoading = true
-        let request = spotifyApi.searchTracks(searchTerm: text) { searchResponse in
-            self.isLoading = false
-            
-            // Skip if the search was cancelled
-            guard let searchResults = searchResponse?.tracks.items else {
-                // TODO: self.error = "Failed to load the tracks." or cancelled
-                return
-            }
-            
-            // Remove the request from pending and store the results
-            self.searchResults = searchResults
-            self.currentSearchRequest = nil
-        }
-        currentSearchRequest = request
+    func search(_ text: String?) {
+        searchText = text
+        searchDataSource.refresh()
     }
     
     func addTrack(at index: Int, completion: @escaping (Bool) -> ()) {
@@ -103,7 +52,7 @@ final class PlaylistPresenter: BasePresenter {
         }
         
         // Add the track to the playlist
-        let track = searchResults[index]
+        let track = searchDataSource.items[index]
         spotifyApi.addTracksToPlaylist(withId: playlist.id, uris: [track.uri]) { snapshot in
             // Show an error if the response is missing
             guard snapshot != nil else {
@@ -113,7 +62,7 @@ final class PlaylistPresenter: BasePresenter {
             }
             
             // Reload the tracks to display it in the list
-            self.loadTracks()
+            self.tracksDataSource.refresh()
             completion(true)
         }
     }
@@ -139,7 +88,7 @@ final class PlaylistPresenter: BasePresenter {
     
     func removeTrack(at index: Int, completion: @escaping (Bool) -> ()) {
         // Assert the playlist and track exist
-        guard let playlist = playlist, let track = tracks[index].track else {
+        guard let playlist = playlist, let track = tracksDataSource.items[index].track else {
             completion(false)
             return
         }
@@ -155,14 +104,14 @@ final class PlaylistPresenter: BasePresenter {
             }
             
             // Assert the track still exists in the table data
-            guard let index = self.tracks.firstIndex(where: { $0.track?.uri == track.uri }) else {
+            guard let index = self.tracksDataSource.items.firstIndex(where: { $0.track?.uri == track.uri }) else {
                 completion(false)
                 return
             }
             
             // End the remove action and update the data source
             completion(true)
-            self.tracks.remove(at: index)
+            self.tracksDataSource.removeItem(at: index)
         }
     }
     
@@ -185,9 +134,83 @@ final class PlaylistPresenter: BasePresenter {
             }
             
             // Update the model
-            let track = self.tracks.remove(at: fromIndex)
-            self.tracks.insert(track, at: toIndex)
+            self.tracksDataSource.moveItem(from: fromIndex, to: toIndex)
             completion(true)
         }
+    }
+}
+
+
+// MARK: - Tracks Source Delegate
+
+extension PlaylistPresenter: TracksDataSourceDelegate {
+    
+    func fetchItems(startIndex: Int, amount: Int, completion: @escaping (PagerResult<TrackItem>) -> ()) {
+        // Get the playlist or clear the list if creating one
+        guard let playlist = playlist else {
+            completion(.success(items: []))
+            return
+        }
+        
+        // Set the loading state and get the tracks
+        isLoading = startIndex == 0
+        spotifyApi.getPlaylistTracks(playlistId: playlist.id, offset: startIndex, limit: amount) { pagingResponse in
+            self.isLoading = false
+            
+            // Show an error if the response is missing
+            guard let tracks = pagingResponse?.items else {
+                self.error = "Failed to load the tracks."
+                completion(.error)
+                return
+            }
+            completion(.success(items: tracks))
+        }
+    }
+    
+    func itemsDidUpdate(_ items: [TrackItem]) {
+        playlistDelegate?.tracksDidChange(items)
+    }
+    
+    func filterItems(_ items: [TrackItem]) -> [TrackItem] {
+        return items
+    }
+}
+
+
+// MARK: - Search Source Delegate
+
+extension PlaylistPresenter: SearchDataSourceDelegate {
+    
+    func fetchItems(startIndex: Int, amount: Int, completion: @escaping (PagerResult<Track>) -> ()) {
+        guard let searchText = searchText, !searchText.isEmpty else {
+            completion(PagerResult.success(items: []))
+            return
+        }
+        // Cancel any previous search requests and begin loading
+        currentSearchRequest?.cancel()
+        isLoading = true
+        let request = spotifyApi.searchTracks(searchTerm: searchText, offset: startIndex, limit: amount) { searchResponse in
+            self.isLoading = false
+            
+            // Skip if the search was cancelled
+            guard let searchResults = searchResponse?.tracks.items else {
+                // TODO: self.error = "Failed to load the tracks." or cancelled
+                completion(PagerResult.error)
+                return
+            }
+            
+            // Remove the request from pending and store the results
+            completion(.success(items: searchResults))
+            self.currentSearchRequest = nil
+        }
+        currentSearchRequest = request
+    }
+    
+    func itemsDidUpdate(_ items: [Track]) {
+        playlistDelegate?.searchResultsDidChange(items)
+    }
+    
+    func filterItems(_ items: [Track]) -> [Track] {
+        return items
     }
 }

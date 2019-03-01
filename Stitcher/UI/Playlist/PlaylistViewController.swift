@@ -41,7 +41,7 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-        presenter.loadTracks()
+        presenter.tracksDataSource.refresh()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -54,14 +54,14 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
     override func getEmptyStateConfig() -> EmptyStateConfig? {
         if let config = super.getEmptyStateConfig() {
             return config
-        } else if presenter.searchResults.isEmpty && isSearching {
+        } else if presenter.searchDataSource.items.isEmpty && isSearching {
             var config = EmptyStateConfig()
             let searchText = navigationItem.searchController?.searchBar.text ?? ""
             config.state = .empty
             config.title = (Strings.searchResultsEmptyTitle.localized + "\"\(searchText)\"").attributed
             config.description = Strings.searchResultsDescription.localized.attributed
             return config
-        } else if presenter.tracks.isEmpty && !isSearching {
+        } else if presenter.tracksDataSource.items.isEmpty && !isSearching {
             var config = EmptyStateConfig()
             config.state = .empty
             config.buttonTitle = Strings.tracksEmptyButtonTitle.localized.attributed
@@ -80,22 +80,30 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
         guard presenter.isAuthenticated else {
             return 0
         }
-        return isSearching ? presenter.searchResults.count : presenter.tracks.count
+        return isSearching ? presenter.searchDataSource.items.count : presenter.tracksDataSource.items.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if isSearching {
-            let track = presenter.searchResults[indexPath.row]
-            let occurrences = presenter.tracks.count(where: { $0.track?.uri == track.uri })
+            let track = presenter.searchDataSource.items[indexPath.row]
+            let occurrences = presenter.tracksDataSource.items.count(where: { $0.track?.uri == track.uri })
             return ViewFactory.makeSearchTableViewCell(tableView, indexPath: indexPath, track: track, occurrences: occurrences)
         } else {
-            return ViewFactory.makeTrackTableViewCell(tableView, indexPath: indexPath, track: presenter.tracks[indexPath.row].track)
+            return ViewFactory.makeTrackTableViewCell(tableView, indexPath: indexPath, track: presenter.tracksDataSource.items[indexPath.row].track)
         }
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let track = isSearching ? presenter.searchResults[indexPath.row] : presenter.tracks[indexPath.row].track
+        // Load images if needed
+        let track = isSearching ? presenter.searchDataSource.items[indexPath.row] : presenter.tracksDataSource.items[indexPath.row].track
         ViewFactory.loadImage(track?.album.images.last?.url, forCell: cell)
+        
+        // Fetch more items if needed
+        if isSearching && indexPath.row == presenter.searchDataSource.items.count - 1 {
+            presenter.searchDataSource.loadMoreIfNeeded()
+        } else if indexPath.row == presenter.tracksDataSource.items.count - 1 {
+            presenter.tracksDataSource.loadMoreIfNeeded()
+        }
     }
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
@@ -120,13 +128,13 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return isSearching && !presenter.searchResults.isEmpty
+        return isSearching && !presenter.searchDataSource.items.isEmpty
             ? Strings.searchSectionTitle.localized
             : nil
     }
     
     override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        return !isSearching && !presenter.tracks.isEmpty && presenter.searchResults.isEmpty
+        return !isSearching && !presenter.tracksDataSource.items.isEmpty && presenter.searchDataSource.items.isEmpty
             ? Strings.tracksFooterDescription.localized
             : nil
     }
@@ -152,7 +160,7 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
         tableView.deselectRow(at: indexPath, animated: true)
         
         // Tracks cannot be selected only search results
-        guard !presenter.searchResults.isEmpty && isSearching else {
+        guard !presenter.searchDataSource.items.isEmpty && isSearching else {
             return
         }
         
@@ -264,7 +272,7 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
         case .authenticationChallenge:
             presenter.login(viewController: self)
         case .error:
-            presenter.loadTracks()
+            presenter.tracksDataSource.refresh()
             break
         case .empty:
             navigationItem.searchController?.searchBar.becomeFirstResponder()
@@ -277,23 +285,23 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
     // MARK: - Search Delegate
     
     func updateSearchResults(for searchController: UISearchController) {
-        presenter.search(text: searchController.searchBar.text ?? "")
+        presenter.search(searchController.searchBar.text ?? "")
     }
     
     func didDismissSearchController(_ searchController: UISearchController) {
         tableView.reloadData()
-        isReorderControlHidden = presenter.tracks.count == 0
+        isReorderControlHidden = presenter.tracksDataSource.items.count == 0
     }
     
     
     // MARK: - Base Presenter Delegate
     
     override func isUserAuthenticatedDidChange(_ isAuthenticated: Bool) {
-        isAuthenticated ? presenter.loadTracks() : tableView.reloadData()
+        isAuthenticated ? presenter.tracksDataSource.refresh() : tableView.reloadData()
     }
     
     override func isLoadingChanged(_ isLoading: Bool) {
-        if (presenter.tracks.isEmpty || presenter.searchResults.isEmpty) && isLoading {
+        if (presenter.tracksDataSource.items.isEmpty || presenter.searchDataSource.items.isEmpty) && isLoading {
             tableView.reloadData()
         }
     }
