@@ -17,7 +17,7 @@ struct Track: Codable, Equatable {
     let explicit: Bool
     let externalIds: ExternalIDS
     let externalUrls: ExternalUrls
-    let href: String
+    let href: String?
     let id: String
     let name: String
     let popularity: Int

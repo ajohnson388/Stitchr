@@ -13,5 +13,5 @@ import OAuthSwift
     A listener for observing changes in the cache.
  */
 protocol CacheDelegate: class {
-    func userCredentialsDidChange(_ credentials: OAuthSwiftCredential?)
+    func userCredentialsDidChange(_ credentials: TokenStore?)
 }

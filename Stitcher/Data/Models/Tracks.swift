@@ -9,6 +9,6 @@
 import Foundation
 
 struct Tracks: Codable {
-    let href: String
+    let href: String?
     let total: Int
 }

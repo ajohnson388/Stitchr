@@ -10,7 +10,7 @@ import Foundation
 
 struct Owner: Codable {
     let externalUrls: ExternalUrls
-    let href: String
+    let href: String?
     let id: String
     let type: String
     let uri: String

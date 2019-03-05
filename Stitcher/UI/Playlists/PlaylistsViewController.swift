@@ -205,7 +205,7 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
         
         switch state {
         case .authenticationChallenge:
-            presenter.login(viewController: self)
+            presenter.login()
         case .error:
             presenter.playlistsDataSource.refresh()
         case .empty:

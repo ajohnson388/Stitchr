@@ -10,6 +10,7 @@ import Foundation
 
 extension String {
     
+    /// Converts a `String` into an `NSAttributedString`.
     var attributed: NSAttributedString {
         return NSAttributedString(string: self)
     }

@@ -18,20 +18,10 @@ final class LocalCache: Cache {
     
     weak var delegate: CacheDelegate?
     
-    var isUserAuthorized: Bool {
-        get {
-            return UserDefaults.standard.bool(forKey: Key.isUserAuthorized.rawValue)
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Key.isUserAuthorized.rawValue)
-            UserDefaults.standard.synchronize()
-        }
-    }
-    
-    var userCredentials: OAuthSwiftCredential?  {
+    var userCredentials: TokenStore?  {
         get {
             let data = UserDefaults.standard.data(forKey: Key.userCredentials.rawValue)
-            return OAuthSwiftCredential.decode(data: data)
+            return TokenStore.decode(data: data)
         }
         set {
             UserDefaults.standard.set(newValue.encode(), forKey: Key.userCredentials.rawValue)

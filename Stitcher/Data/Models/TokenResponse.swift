@@ -13,5 +13,5 @@ struct TokenResponse: Codable {
     let tokenType: String
     let scope: String
     let expiresIn: Int
-    let refreshToken: String
+    let refreshToken: String?
 }

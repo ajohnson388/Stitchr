@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import OAuthSwift
 
 struct TokenStore: Codable {
     
@@ -15,6 +16,18 @@ struct TokenStore: Codable {
     var expirationDate: Date?
     
     init() {}
+    
+    init(credentials: OAuthSwiftCredential) {
+        accessToken = credentials.oauthToken
+        refreshToken = credentials.oauthRefreshToken
+        expirationDate = credentials.oauthTokenExpiresAt
+    }
+    
+    init(tokenResponse: TokenResponse) {
+        accessToken = tokenResponse.accessToken
+        refreshToken = tokenResponse.refreshToken
+        expirationDate = Date().addingTimeInterval(Double(tokenResponse.expiresIn))
+    }
     
     var isExpired: Bool {
         guard let expirationDate = expirationDate else {

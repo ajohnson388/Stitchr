@@ -13,7 +13,7 @@ struct Album: Codable, Equatable {
     let artists: [AddedBy]
     let availableMarkets: [String]
     let externalUrls: ExternalUrls
-    let href: String
+    let href: String?
     let id: String
     let images: [Image]
     let name: String

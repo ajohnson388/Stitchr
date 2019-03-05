@@ -20,14 +20,9 @@ protocol Cache: class {
     var delegate: CacheDelegate? { get set }
     
     /**
-        True, if the user has authorized the app for Spotify.
-     */
-    var isUserAuthorized: Bool { get set }
-    
-    /**
         The credentials used for OAuth.
      */
-    var userCredentials: OAuthSwiftCredential? { get set }
+    var userCredentials: TokenStore? { get set }
     
     /**
         The user's Spotify id.

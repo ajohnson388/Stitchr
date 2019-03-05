@@ -68,11 +68,7 @@ final class PlaylistPresenter: BasePresenter {
     }
     
     func createPlaylist(withTrackAt index: Int, completion: @escaping (Bool) -> ()) {
-        guard let userId = cache.userId else {
-            completion(false)  // TODO: Fetch profile?
-            return
-        }
-        spotifyApi.createPlaylist(name: Strings.newPlaylistTitle.localized, userId: userId) { playlist in
+        spotifyApi.createPlaylist(name: Strings.newPlaylistTitle.localized) { playlist in
             // Show an error if the response is missing
             guard let playlist = playlist else {
                 completion(false)
@@ -89,6 +85,7 @@ final class PlaylistPresenter: BasePresenter {
     func removeTrack(at index: Int, completion: @escaping (Bool) -> ()) {
         // Assert the playlist and track exist
         guard let playlist = playlist, let track = tracksDataSource.items[index].track else {
+            Logger.log(#function, "Cannot remove track due to mising playlist or track.")
             completion(false)
             return
         }
@@ -98,7 +95,6 @@ final class PlaylistPresenter: BasePresenter {
             
             // Show an error if the response is missing
             guard snapshot != nil else {
-                // TODO: self.error = "Failed to remove \(track.name) from the playlist."
                 completion(false)
                 return
             }

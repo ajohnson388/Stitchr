@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let navController = UINavigationController(rootViewController: controller)
         initApp(withViewController: navController)
         
-        if LocalCache().isUserAuthorized {
+        if LocalCache().userCredentials != nil {
             addShortcuts(application: application)
         }
         return true
@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
-        guard LocalCache().isUserAuthorized else {
+        guard LocalCache().userCredentials != nil else {
             completionHandler(false)
             return
         }

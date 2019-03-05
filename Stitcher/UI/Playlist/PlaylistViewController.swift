@@ -200,10 +200,11 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
         editPresenter.playlist = presenter.playlist
         editPlaylistController.presenter = editPresenter
         editPlaylistController.delegate = self
-
         
         // Show the edit controller
         navigationController.pushViewController(editPlaylistController, animated: true)
+        
+        // TODO: Dismiss navbar before transition starts and vice versa for smooth transition
     }
     
     
@@ -270,7 +271,7 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
         
         switch state {
         case .authenticationChallenge:
-            presenter.login(viewController: self)
+            presenter.login()
         case .error:
             presenter.tracksDataSource.refresh()
             break

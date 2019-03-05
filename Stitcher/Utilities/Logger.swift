@@ -10,6 +10,10 @@ import Foundation
 
 struct Logger {
     
+    
+    /// A wrapper around the print statement that only emits for DEBUG builds.
+    ///
+    /// - Parameter items: The items to log to the console.
     static func log(_ items: Any...) {
         #if DEBUG
             print(items)

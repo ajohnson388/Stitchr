@@ -9,7 +9,7 @@
 import Foundation
 
 struct PagingResponse<T: Codable>: Codable {
-    let href: String
+    let href: String?
     let items: [T]
     let limit: Int
     let next: String?

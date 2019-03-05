@@ -55,11 +55,7 @@ class EditPlaylistPresenter: BasePresenter {
     }
     
     func createPlaylist(withTitle title: String, completion: @escaping (Bool) -> ()) {
-        guard let userId = cache.userId else {
-            completion(false)
-            return
-        }
-        spotifyApi.createPlaylist(name: title, userId: userId) { playlist in
+        spotifyApi.createPlaylist(name: title) { playlist in
             self.playlist = playlist
             completion(playlist != nil)
         }
