@@ -7,24 +7,10 @@
 //
 
 import Foundation
-import OAuthSwift
 import Alamofire
 
 protocol Cancellable {
     func cancel()
-}
-
-struct CancellableRequest: Cancellable {
-    
-    private let request: OAuthSwiftRequestHandle
-    
-    func cancel() {
-        request.cancel()
-    }
-    
-    init(_ request: OAuthSwiftRequestHandle) {
-        self.request = request
-    }
 }
 
 struct CancellableAlamofireRequest: Cancellable {

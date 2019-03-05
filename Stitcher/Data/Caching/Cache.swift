@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import OAuthSwift
 
 /**
     A service for caching data locally.

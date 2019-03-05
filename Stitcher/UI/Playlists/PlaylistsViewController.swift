@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 import SDWebImage
 import DZNEmptyDataSet
-import OAuthSwift
 
 final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>, UIViewControllerPreviewingDelegate {
     

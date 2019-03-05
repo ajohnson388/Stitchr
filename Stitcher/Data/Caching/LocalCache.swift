@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import OAuthSwift
 
 /**
     An implementation of the Cache module that uses the PList.

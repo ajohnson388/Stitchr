@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import OAuthSwift
 
 protocol PlaylistPresenterDelegate: BasePresenterDelegate {
     func tracksDidChange(_ tracks: [TrackItem])

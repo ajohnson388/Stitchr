@@ -9,7 +9,6 @@
 import Foundation
 import UIKit
 import DZNEmptyDataSet
-import OAuthSwift
 
 class BaseTableViewController<T>: UITableViewController, DZNEmptyDataSetSource,
     DZNEmptyDataSetDelegate, BasePresenterDelegate where T: BasePresenter {

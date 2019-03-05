@@ -8,7 +8,6 @@
 
 import Foundation
 import UIKit
-import OAuthSwift
 
 protocol PlaylistsPresenterDelegate: BasePresenterDelegate {
     func playlistsDidChange(_ playlists: [Playlist])

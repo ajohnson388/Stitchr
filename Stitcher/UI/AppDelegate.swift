@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import OAuthSwift
 
 @UIApplicationMain
 
@@ -23,11 +22,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if LocalCache().userCredentials != nil {
             addShortcuts(application: application)
         }
-        return true
-    }
-    
-    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        OAuth2Swift.handle(url: url)
         return true
     }
     

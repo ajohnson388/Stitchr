@@ -8,7 +8,6 @@
 
 import Foundation
 import Alamofire
-import OAuthSwift
 import SafariServices
 
 
@@ -22,14 +21,6 @@ final class SpotifyApi {
     
     private let spotifyOAuth: SpotifyOAuth
     private let cache: Cache
-    private let oAuth = OAuth2Swift(
-        consumerKey: BuildConfig.spotifyClientId,
-        consumerSecret: BuildConfig.spotifyClientSecret,
-        authorizeUrl: SpotifyOAuth.accountsBaseUrl + "authorize",
-        accessTokenUrl: SpotifyOAuth.accountsBaseUrl + "token",
-        responseType: "code",
-        contentType: "application/x-www-form-urlencoded"
-    )
     
     
     // MARK: - Lifecycle
@@ -38,18 +29,9 @@ final class SpotifyApi {
     ///
     /// - Parameter cache: The local cache for accessing authorization data.
     init(cache: Cache = LocalCache()) {
-        // Init the fields
         self.cache = cache
         spotifyOAuth = SpotifyOAuth(cache: cache)
         spotifyOAuth.delegate = self
-        
-        // Restore the user's credentials from the local cache
-        if let credentials = cache.userCredentials, let accessToken = credentials.accessToken ,
-            let refreshToken = credentials.refreshToken, let expires = credentials.expirationDate {
-            oAuth.client.credential.oauthToken = accessToken
-            oAuth.client.credential.oauthRefreshToken = refreshToken
-            oAuth.client.credential.oauthTokenExpiresAt = expires
-        }
     }
     
     

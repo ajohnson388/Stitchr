@@ -3,7 +3,6 @@ PODS:
   - Anchorage (4.3)
   - DZNEmptyDataSet (1.8.1)
   - Hero (1.4.0)
-  - OAuthSwift (1.2.2)
   - SDWebImage (4.4.3):
     - SDWebImage/Core (= 4.4.3)
   - SDWebImage/Core (4.4.3)
@@ -13,7 +12,6 @@ DEPENDENCIES:
   - Anchorage (~> 4.3)
   - DZNEmptyDataSet
   - Hero
-  - OAuthSwift (~> 1.2)
   - SDWebImage (~> 4.4)
 
 SPEC REPOS:
@@ -22,7 +20,6 @@ SPEC REPOS:
     - Anchorage
     - DZNEmptyDataSet
     - Hero
-    - OAuthSwift
     - SDWebImage
 
 SPEC CHECKSUMS:
@@ -30,9 +27,8 @@ SPEC CHECKSUMS:
   Anchorage: 21a98675245188427f0bcea21404d42a824a766f
   DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
   Hero: bac92350d7201a1a940003e0767c7b52ce7c99a1
-  OAuthSwift: 27b34fe80b76b67cd8f45571e0be2432bc9f6de1
   SDWebImage: c5594f1a19c48d526d321e548902b56b479cd508
 
-PODFILE CHECKSUM: a28a17138bbf759481f0fe5fcd919ea64d0142be
+PODFILE CHECKSUM: 00721ff03a3007b0c070a96d5c58c16f92ab8027
 
 COCOAPODS: 1.5.2

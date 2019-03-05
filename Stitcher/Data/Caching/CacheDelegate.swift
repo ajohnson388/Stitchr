@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import OAuthSwift
 
 /**
     A listener for observing changes in the cache.

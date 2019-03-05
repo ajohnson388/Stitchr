@@ -8,7 +8,6 @@
 
 import Foundation
 import UIKit
-import OAuthSwift
 import DZNEmptyDataSet
 
 /// The base delegate for the presenter that is used to trigger changes in data.
