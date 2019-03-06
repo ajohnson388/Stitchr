@@ -29,7 +29,7 @@ final class PlaylistPresenter: BasePresenter {
     
     override init(cache: Cache, spotifyApi: SpotifyApi = SpotifyApi()) {
         super.init(cache: cache, spotifyApi: spotifyApi)
-        tracksDataSource.batchSize = 30
+        tracksDataSource.batchSize = 50
         tracksDataSource.delegate = self
         searchDataSource.delegate = self
     }
