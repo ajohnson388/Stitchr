@@ -12,7 +12,7 @@
 "loginRequiredTitle" = "Login Required";
 "errorTitle" = "Error";
 "playlistsEmptyTitle" = "No Playlists";
-"loginRequiredDescription" = "You need to authorize your Spotify account in order to use Stitcher.";
+"loginRequiredDescription" = "You need to authorize your Spotify account in order to use Stitchr.";
 "playlistsEmptyDescription" = "Your playlists are looking a little empty.. \n Would you like to create one?";
 "loginRequiredButtonTitle" = "Authorize";
 "errorButtonTitle" = "Try Again";
