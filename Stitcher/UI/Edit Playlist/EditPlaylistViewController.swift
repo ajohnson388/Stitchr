@@ -54,6 +54,7 @@ final class EditPlaylistViewController: UIViewController {
         containerView.backgroundColor = Themes.current.primaryDarkColor
         navigationItem.largeTitleDisplayMode = .never
         titleTextField.text = presenter.playlist?.name ?? Strings.newPlaylistTitle.localized
+        titleTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         
         navigationItem.leftBarButtonItem = cancelButton
         navigationItem.rightBarButtonItem = saveButton
@@ -68,7 +69,13 @@ final class EditPlaylistViewController: UIViewController {
     @objc
     func didTapSave(_ sender: UIBarButtonItem) {
         saveButton.isEnabled = false
+        titleTextField.isEnabled = false
         presenter.savePlaylistTitle(titleTextField.text)
+    }
+    
+    @objc
+    func textFieldDidChange(_ textField: UITextField) {
+        saveButton.isEnabled = presenter.isValidTitle(textField.text)
     }
 }
 
@@ -91,6 +98,7 @@ extension EditPlaylistViewController: EditPlaylistPresenterDelegate {
     
     func playlistTitleDidSave(_ isSaved: Bool) {
         saveButton.isEnabled = true
+        titleTextField.isEnabled = true
         if isSaved {
             delegate?.playlistTitleDidChange(title: titleTextField.text ?? "")
             navigationController?.popViewController(animated: true)

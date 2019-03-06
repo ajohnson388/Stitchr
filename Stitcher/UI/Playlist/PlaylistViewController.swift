@@ -186,8 +186,7 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
             return
         }
         
-        // Configure first controller transition
-        hero.isEnabled = true
+        // Configure the push animation
         navigationController.hero.isEnabled = true
         navigationController.hero.navigationAnimationType = .autoReverse(presenting: .uncover(direction: .down))
 

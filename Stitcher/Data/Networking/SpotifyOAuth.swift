@@ -164,7 +164,6 @@ final class SpotifyOAuth {
                 }
                 return
             }
-            completion(response.statusCode < 400)
             
             // Take action based on the returned status code
             switch response.statusCode {

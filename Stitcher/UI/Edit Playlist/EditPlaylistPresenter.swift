@@ -26,31 +26,28 @@ class EditPlaylistPresenter: BasePresenter {
         super.init(cache: cache, spotifyApi: spotifyApi)
     }
     
-    func savePlaylistTitle(_ title: String?) {
+    func isValidTitle(_ title: String?) -> Bool {
         guard let title = title else {
-            editPlaylistDelegate?.playlistTitleDidSave(false)
-            return
+            return false
         }
-        
-        guard title != playlist?.name else {
+        return !title.isEmpty
+    }
+    
+    func savePlaylistTitle(_ title: String?) {
+        guard let title = title, isValidTitle(title) else {
             editPlaylistDelegate?.playlistTitleDidSave(true)
             return
         }
         
-        playlist?.name = title
         guard let playlistId = playlist?.id else {
             createPlaylist(withTitle: title) { isSaved in
-                guard isSaved else {
-                    self.editPlaylistDelegate?.playlistTitleDidSave(false)
-                    return
-                }
-                self.savePlaylistTitle(title)
+                self.editPlaylistDelegate?.playlistTitleDidSave(isSaved)
             }
             return
         }
         
         spotifyApi.updatePlaylistName(withId: playlistId, name: title) { success in
-            self.editPlaylistDelegate?.playlistTitleDidSave(true)
+            self.editPlaylistDelegate?.playlistTitleDidSave(success)
         }
     }
     
