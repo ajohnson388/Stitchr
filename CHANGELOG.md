@@ -1,5 +1,16 @@
 # Changelog for Stitchr
 
+## 1.2.0 - March 6, 2019
+
+### Features
+* Added peek and pop to playlists
+* Added home screen shortcut to create a playlist after the user has authorized Spotify
+* Increased batch size for playlist tracks to 50
+
+### Bug Fixes
+* Changed the string "Stitcher" to "Stitchr" in the authorization prompt screen
+* Added pagination to the playlists, tracks, and search results so that data is not limited to sets of 20
+
 ## 1.1.0 - February 13, 2019
 
 ### Features
