@@ -10,6 +10,12 @@
 ### Bug Fixes
 * Changed the string "Stitcher" to "Stitchr" in the authorization prompt screen
 * Added pagination to the playlists, tracks, and search results so that data is not limited to sets of 20
+* Fixed a bug causing authorization to be required every hour
+
+### Codebase improvements
+* Removed the OAuthSwift dependency and implemented a SpotifyOAuth wrapper
+* Added documentation
+* Removed unused functions and comments
 
 ## 1.1.0 - February 13, 2019
 
