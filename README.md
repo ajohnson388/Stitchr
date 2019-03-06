@@ -53,7 +53,7 @@ Distributed under the Apache 2.0 license. See ``LICENSE`` for more information.
 [license-url]: LICENSE
 [platform-image]:https://img.shields.io/badge/Platform-iOS-green.svg?style=flat
 [platform-url]:https://developer.apple.com/
-[version-image]:https://img.shields.io/badge/Version-iOS-green.svg?style=flat
+[version-image]:https://img.shields.io/badge/Version-1.2-purple.svg?style=flat
 [version-url]:https://github.com/ajohnson388/Stitchr/blob/master/CHANGELOG.md
 [app-store-image]:https://github.com/ajohnson388/Stitcher/blob/master/images/App-Store-Badge.svg
 [app-store-url]:https://itunes.apple.com/us/app/stitchr/id1451642579?ls=1&mt=8
