@@ -39,6 +39,13 @@ final class LocalCache: Cache {
         }
     }
     
+    func clear() {
+        for key in Key.allCases {
+            UserDefaults.standard.set(nil, forKey: key.rawValue)
+        }
+        UserDefaults.standard.synchronize()
+    }
+    
     
     // MARK: - Lifecycle
     
@@ -49,8 +56,7 @@ final class LocalCache: Cache {
     
     // MARK: - Associated Types
     
-    enum Key: String {
-        case isUserAuthorized
+    enum Key: String, CaseIterable {
         case userId
         case userCredentials
     }

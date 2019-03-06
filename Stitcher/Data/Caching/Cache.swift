@@ -27,4 +27,6 @@ protocol Cache: class {
         The user's Spotify id.
      */
     var userId: String? { get set }
+    
+    func clear()
 }
