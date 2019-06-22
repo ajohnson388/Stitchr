@@ -14,7 +14,7 @@ import DZNEmptyDataSet
 /**
     The user interface for adding, re-ordering, and remove tacks in a playlist.
  */
-final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, UISearchControllerDelegate, UISearchResultsUpdating {
+final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, KeyboardSearchControllerDelegate, UISearchResultsUpdating {
     
     // MARK: - Properties
     
@@ -26,12 +26,28 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
         return isSearchActive && !isSearchTextEmpty
     }
     
+    var startSearchDiscoverabilityTitle =  "Search Track"
+    
+    override var keyCommands: [UIKeyCommand]? {
+        get {
+            var commands = super.keyCommands ?? []
+            
+            commands.append(UIKeyCommand(input: "F", modifierFlags: [UIKeyModifierFlags.command], action: #selector(startSearch), discoverabilityTitle: startSearchDiscoverabilityTitle))
+            return commands
+        }
+    }
+    
     
     // MARK: - Lifecycle
     
     override init(presenter: PlaylistPresenter) {
         super.init(presenter: presenter)
         presenter.playlistDelegate = self
+        
+        childView.selectAboveDiscoverabilityTitle = "Select Search Result Above"
+        childView.selectBelowDiscoverabilityTitle = "Select Search Result Below"
+        childView.selectTopDiscoverabilityTitle = "Select First Search Result"
+        childView.selectBottomDiscoverabilityTitle = "Select Last Search Result"
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -218,7 +234,7 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
         navigationItem.hidesSearchBarWhenScrolling = false
         
         // Setup search
-        let searchController = UISearchController(searchResultsController: nil)
+        let searchController = KeyboardSearchController(searchResultsController: nil)
         searchController.delegate = self
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
@@ -293,6 +309,16 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
         isReorderControlHidden = presenter.tracksDataSource.items.count == 0
     }
     
+    // MARK: - KEYBOARD TRIGGERS
+    
+    @objc func startSearch() {
+        navigationItem.searchController?.searchBar.becomeFirstResponder()
+    }
+    
+    func didStartResultSelectionFromKeyboard(searchController: UISearchController) {
+        childView.becomeFirstResponder()
+        childView.selectBelow()
+    }
     
     // MARK: - Base Presenter Delegate
     
