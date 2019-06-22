@@ -14,6 +14,14 @@ class BaseTableViewController<T>: UITableViewController, DZNEmptyDataSetSource,
     DZNEmptyDataSetDelegate, BasePresenterDelegate where T: BasePresenter {
     
     // MARK: - Properties
+    public var childView: KeyboardTableView! { return tableView as! KeyboardTableView }
+    
+    override func loadView() {
+        tableView = KeyboardTableView(frame: UIScreen.main.bounds, style: .plain)
+        tableView.delegate = self
+        tableView.dataSource = self
+        view = tableView
+    }
     
     let presenter: T
     

@@ -23,6 +23,6 @@ struct BuildConfig {
     
     private enum Key: String {
         case clientId = "Spotify Client Id"
-        case clientSecret = "Spotify Consumer Secret"
+        case clientSecret = "Spotify Client Secret"
     }
 }

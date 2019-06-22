@@ -17,12 +17,27 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
     
     private let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
     
+    var newPlaylistDiscoverabilityTitle =  "New Playlist"
+    
+    override var keyCommands: [UIKeyCommand]? {
+        get {
+            var commands = super.keyCommands ?? []
+            
+            commands.append(UIKeyCommand(input: "N", modifierFlags: [UIKeyModifierFlags.command], action: #selector(newPlaylistTriggered), discoverabilityTitle: newPlaylistDiscoverabilityTitle))
+            return commands
+        }
+    }
     
     // MARK: - Lifecycle
     
     override init(presenter: PlaylistsPresenter) {
         super.init(presenter: presenter)
         presenter.playlistsDelegate = self
+        
+        childView.selectAboveDiscoverabilityTitle = "Select Playlist Above"
+        childView.selectBelowDiscoverabilityTitle = "Select Playlist Below"
+        childView.selectTopDiscoverabilityTitle = "Select First Playlist"
+        childView.selectBottomDiscoverabilityTitle = "Select Last Playlist"
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -61,6 +76,10 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
     
     @objc
     private func addButtonTapped(_ button: UIBarButtonItem) {
+        openPlaylist(playlist: nil)
+    }
+    
+    @objc func newPlaylistTriggered() {
         openPlaylist(playlist: nil)
     }
     
