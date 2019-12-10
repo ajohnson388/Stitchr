@@ -15,13 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        let controller = makePlaylistsViewController()
-        let navController = UINavigationController(rootViewController: controller)
-        initApp(withViewController: navController)
-        
-        if LocalCache().userCredentials != nil {
-            addShortcuts(application: application)
-        }
+        initApp()
+        addShortcutsIfNeeded(to: application)
         return true
     }
     
@@ -30,10 +25,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             completionHandler(false)
             return
         }
-        let playlistsViewController = makePlaylistsViewController()
-        let navController = UINavigationController(rootViewController: playlistsViewController)
-        playlistsViewController.openPlaylist(playlist: nil, animated: false)
-        initApp(withViewController: navController)
+        initApp()
+        // TODO: Open new playlist
+    }
+    
+    private func addShortcutsIfNeeded(to application: UIApplication) {
+        if LocalCache().userCredentials != nil {
+            addShortcuts(application: application)
+        }
+    }
+    
+    private func initApp() {
+        let deviceType = UIDevice.current.userInterfaceIdiom
+        switch deviceType {
+        case .pad:
+            let controller = makeContainerViewController()
+            initApp(withViewController: controller)
+        case .phone:
+            let controller = PlaylistsViewController.make()
+            let navController = UINavigationController(rootViewController: controller)
+            initApp(withViewController: navController)
+        default:
+            fatalError("\(deviceType) is not supported.")
+        }
     }
     
     private func initApp(withViewController viewController: UIViewController) {
@@ -43,12 +57,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Themes.current.apply()
     }
     
-    private func makePlaylistsViewController() -> PlaylistsViewController {
-        let cache = LocalCache()
-        let spotifyApi = SpotifyApi(cache: cache)
-        let presenter = PlaylistsPresenter(cache: cache, spotifyApi: spotifyApi)
-        cache.delegate = presenter
-        return PlaylistsViewController(presenter: presenter)
+    private func makeContainerViewController() -> ContainerViewController {
+        let splitViewController = ContainerViewController()
+        splitViewController.preferredDisplayMode = .allVisible
+        splitViewController.viewControllers = [
+            UINavigationController(rootViewController: PlaylistsViewController.make()),
+            UINavigationController(rootViewController: PlaylistViewController.make())
+        ]
+        return splitViewController
     }
     
     private func addShortcuts(application: UIApplication) {

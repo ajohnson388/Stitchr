@@ -18,6 +18,15 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
     
     // MARK: - Properties
     
+    static func make(withPlaylist playlist: Playlist? = nil) -> PlaylistViewController {
+        let cache = LocalCache()
+        let spotifyApi = SpotifyApi(cache: cache)
+        let playlistPresenter = PlaylistPresenter(cache: cache, spotifyApi: spotifyApi)
+        playlistPresenter.setPlaylist(playlist: playlist)
+        cache.delegate = playlistPresenter
+        return PlaylistViewController(presenter: playlistPresenter)
+    }
+    
     private var headerView: EditTableView?
     private let editButton = UIBarButtonItem(image: Images.editIcon.make(), style: .plain, target: nil, action: nil)
     private var isSearching: Bool {

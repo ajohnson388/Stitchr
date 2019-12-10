@@ -3,11 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		185872DF9970AABF3B98F9B6 /* Pods_StitcherTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F883D4210A32E56CA63AF017 /* Pods_StitcherTests.framework */; };
+		421FDC8122C00B6F00726BE9 /* UIDevice+Identifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421FDC8022C00B6F00726BE9 /* UIDevice+Identifier.swift */; };
+		421FDC8322C01BA800726BE9 /* PlaylistsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421FDC8222C01BA800726BE9 /* PlaylistsRouter.swift */; };
 		422D189822262432009321B8 /* PaginationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422D189722262432009321B8 /* PaginationDataSource.swift */; };
 		422D189A2226D74F009321B8 /* PlaylistsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422D18992226D74F009321B8 /* PlaylistsDataSource.swift */; };
 		422E8CFE2200FC770069BF1B /* Cancellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E8CFD2200FC770069BF1B /* Cancellable.swift */; };
@@ -31,6 +33,7 @@
 		424EFF3B21F94BC900DDB4E5 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424EFF3A21F94BC900DDB4E5 /* Image.swift */; };
 		424EFF3E21F965C100DDB4E5 /* PlaylistsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424EFF3D21F965C100DDB4E5 /* PlaylistsViewController.swift */; };
 		424EFF4121F9690C00DDB4E5 /* PlaylistsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424EFF4021F9690C00DDB4E5 /* PlaylistsPresenter.swift */; };
+		425F223122DB94C200567CC4 /* UITableView+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425F223022DB94C200567CC4 /* UITableView+Convenience.swift */; };
 		42757BB72211E2E400576D71 /* EditPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42757BB62211E2E400576D71 /* EditPlaylistViewController.swift */; };
 		42757BB92211E31700576D71 /* EditPlaylistPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42757BB82211E31700576D71 /* EditPlaylistPresenter.swift */; };
 		42757BBB2211F26500576D71 /* EditPlaylistViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42757BBA2211F26500576D71 /* EditPlaylistViewController.storyboard */; };
@@ -42,6 +45,7 @@
 		42AEA87C2200A58800B59EC6 /* String+Attributed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42AEA87B2200A58800B59EC6 /* String+Attributed.swift */; };
 		42AEA87E2200B48200B59EC6 /* CacheDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42AEA87D2200B48200B59EC6 /* CacheDelegate.swift */; };
 		42AEA8802200B49200B59EC6 /* LocalCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42AEA87F2200B49200B59EC6 /* LocalCache.swift */; };
+		42B93EDD22B9A3AA0060D857 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B93EDC22B9A3AA0060D857 /* ContainerViewController.swift */; };
 		42CE582E21F8CFB000555CA0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CE582D21F8CFB000555CA0 /* AppDelegate.swift */; };
 		42CE583521F8CFB100555CA0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42CE583421F8CFB100555CA0 /* Assets.xcassets */; };
 		42CE583821F8CFB100555CA0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42CE583621F8CFB100555CA0 /* LaunchScreen.storyboard */; };
@@ -86,6 +90,8 @@
 		099F734F4D3D8B4CF45C3B3A /* Pods-StitcherUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StitcherUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-StitcherUITests/Pods-StitcherUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		1DFBDE42F6027E791AF59F79 /* Pods-StitcherTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StitcherTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-StitcherTests/Pods-StitcherTests.debug.xcconfig"; sourceTree = "<group>"; };
 		259D5FC17BDA19BBCEE67BDE /* Pods-Stitcher.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stitcher.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Stitcher/Pods-Stitcher.debug.xcconfig"; sourceTree = "<group>"; };
+		421FDC8022C00B6F00726BE9 /* UIDevice+Identifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Identifier.swift"; sourceTree = "<group>"; };
+		421FDC8222C01BA800726BE9 /* PlaylistsRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsRouter.swift; sourceTree = "<group>"; };
 		422D189722262432009321B8 /* PaginationDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginationDataSource.swift; sourceTree = "<group>"; };
 		422D18992226D74F009321B8 /* PlaylistsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsDataSource.swift; sourceTree = "<group>"; };
 		422E8CFD2200FC770069BF1B /* Cancellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cancellable.swift; sourceTree = "<group>"; };
@@ -109,6 +115,7 @@
 		424EFF3A21F94BC900DDB4E5 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		424EFF3D21F965C100DDB4E5 /* PlaylistsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsViewController.swift; sourceTree = "<group>"; };
 		424EFF4021F9690C00DDB4E5 /* PlaylistsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsPresenter.swift; sourceTree = "<group>"; };
+		425F223022DB94C200567CC4 /* UITableView+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Convenience.swift"; sourceTree = "<group>"; };
 		42757BB62211E2E400576D71 /* EditPlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPlaylistViewController.swift; sourceTree = "<group>"; };
 		42757BB82211E31700576D71 /* EditPlaylistPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPlaylistPresenter.swift; sourceTree = "<group>"; };
 		42757BBA2211F26500576D71 /* EditPlaylistViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = EditPlaylistViewController.storyboard; sourceTree = "<group>"; };
@@ -120,6 +127,7 @@
 		42AEA87B2200A58800B59EC6 /* String+Attributed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Attributed.swift"; sourceTree = "<group>"; };
 		42AEA87D2200B48200B59EC6 /* CacheDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheDelegate.swift; sourceTree = "<group>"; };
 		42AEA87F2200B49200B59EC6 /* LocalCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalCache.swift; sourceTree = "<group>"; };
+		42B93EDC22B9A3AA0060D857 /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
 		42CE582A21F8CFB000555CA0 /* Stitcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stitcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		42CE582D21F8CFB000555CA0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		42CE583421F8CFB100555CA0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -231,6 +239,8 @@
 				424EFF1F21F8E3D600DDB4E5 /* Codable+Conversion.swift */,
 				42AEA87021FFE33300B59EC6 /* Collection+Count.swift */,
 				42AEA87B2200A58800B59EC6 /* String+Attributed.swift */,
+				421FDC8022C00B6F00726BE9 /* UIDevice+Identifier.swift */,
+				425F223022DB94C200567CC4 /* UITableView+Convenience.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -270,8 +280,9 @@
 		424EFF2621F8ED8F00DDB4E5 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				42757BB52211E2C600576D71 /* Edit Playlist */,
+				42B93EDB22B9A3710060D857 /* Container */,
 				42CE582D21F8CFB000555CA0 /* AppDelegate.swift */,
+				42757BB52211E2C600576D71 /* Edit Playlist */,
 				422E8D072203894F0069BF1B /* Common */,
 				42EA312621FB972200A6E9F0 /* Playlist */,
 				424EFF3C21F9658F00DDB4E5 /* Playlists */,
@@ -294,6 +305,7 @@
 			children = (
 				424EFF3D21F965C100DDB4E5 /* PlaylistsViewController.swift */,
 				424EFF4021F9690C00DDB4E5 /* PlaylistsPresenter.swift */,
+				421FDC8222C01BA800726BE9 /* PlaylistsRouter.swift */,
 			);
 			path = Playlists;
 			sourceTree = "<group>";
@@ -317,6 +329,14 @@
 				42D3EF46220769EF005BDB8F /* BuildConfig.swift */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		42B93EDB22B9A3710060D857 /* Container */ = {
+			isa = PBXGroup;
+			children = (
+				42B93EDC22B9A3AA0060D857 /* ContainerViewController.swift */,
+			);
+			path = Container;
 			sourceTree = "<group>";
 		};
 		42CE582121F8CFB000555CA0 = {
@@ -600,25 +620,16 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Stitcher/Pods-Stitcher-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/Anchorage/Anchorage.framework",
-				"${BUILT_PRODUCTS_DIR}/DZNEmptyDataSet/DZNEmptyDataSet.framework",
-				"${BUILT_PRODUCTS_DIR}/Hero/Hero.framework",
-				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Stitcher/Pods-Stitcher-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Anchorage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DZNEmptyDataSet.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Hero.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Stitcher/Pods-Stitcher-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Stitcher/Pods-Stitcher-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Stitcher/Pods-Stitcher-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -638,6 +649,7 @@
 				42AEA87E2200B48200B59EC6 /* CacheDelegate.swift in Sources */,
 				42EA312C21FB9B3E00A6E9F0 /* Track.swift in Sources */,
 				424EFF3021F9328D00DDB4E5 /* TokenStore.swift in Sources */,
+				42B93EDD22B9A3AA0060D857 /* ContainerViewController.swift in Sources */,
 				424EFF2221F8E53C00DDB4E5 /* Logger.swift in Sources */,
 				422E8D06220384380069BF1B /* BaseTableViewController.swift in Sources */,
 				424EFF2E21F913F100DDB4E5 /* SnapshotResponse.swift in Sources */,
@@ -661,10 +673,12 @@
 				424EFF3721F94B2A00DDB4E5 /* ExternalUrls.swift in Sources */,
 				42AEA87A2200A2E400B59EC6 /* Images.swift in Sources */,
 				42AEA8802200B49200B59EC6 /* LocalCache.swift in Sources */,
+				421FDC8322C01BA800726BE9 /* PlaylistsRouter.swift in Sources */,
 				42CE582E21F8CFB000555CA0 /* AppDelegate.swift in Sources */,
 				42DCE73221FCF01D00218637 /* ViewFactory.swift in Sources */,
 				42EA313421FB9C4000A6E9F0 /* TrackItem.swift in Sources */,
 				42AEA8782200A1E500B59EC6 /* Strings.swift in Sources */,
+				425F223122DB94C200567CC4 /* UITableView+Convenience.swift in Sources */,
 				424EFF3321F93B2500DDB4E5 /* Cache.swift in Sources */,
 				424EFF3921F94B3C00DDB4E5 /* Owner.swift in Sources */,
 				42EA312821FB974A00A6E9F0 /* PlaylistViewController.swift in Sources */,
@@ -674,6 +688,7 @@
 				422D189A2226D74F009321B8 /* PlaylistsDataSource.swift in Sources */,
 				424EFF1E21F8E1F700DDB4E5 /* TokenResponse.swift in Sources */,
 				422E8D02220365A00069BF1B /* EmptyStateConfig.swift in Sources */,
+				421FDC8122C00B6F00726BE9 /* UIDevice+Identifier.swift in Sources */,
 				42EA313021FB9BB300A6E9F0 /* Album.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -864,7 +879,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -885,7 +900,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

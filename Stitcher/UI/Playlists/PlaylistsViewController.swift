@@ -11,11 +11,29 @@ import UIKit
 import SDWebImage
 import DZNEmptyDataSet
 
+protocol PlaylistsViewControllerObserver: class {
+    func didSelectPlaylist(_ playlist: Playlist?)
+    func didCreateNewPlaylist()
+    func didDeletePlaylist()
+}
+
+
+
 final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>, UIViewControllerPreviewingDelegate {
     
     // MARK: - Properties
     
+    static func make() -> PlaylistsViewController {
+        let cache = LocalCache()
+        let spotifyApi = SpotifyApi(cache: cache)
+        let presenter = PlaylistsPresenter(cache: cache, spotifyApi: spotifyApi)
+        cache.delegate = presenter
+        return PlaylistsViewController(presenter: presenter)
+    }
+    
     private let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
+    
+    var playlistsRouter: PlaylistsViewControllerRouter? = nil
     
     
     // MARK: - Lifecycle
@@ -23,6 +41,12 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
     override init(presenter: PlaylistsPresenter) {
         super.init(presenter: presenter)
         presenter.playlistsDelegate = self
+        playlistsRouter = PlaylistsRouter(viewController: self)
+    }
+    
+    convenience init(presenter: PlaylistsPresenter, playlistsRouter: PlaylistsViewControllerRouter) {
+        self.init(presenter: presenter)
+        self.playlistsRouter = playlistsRouter
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -61,7 +85,7 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
     
     @objc
     private func addButtonTapped(_ button: UIBarButtonItem) {
-        openPlaylist(playlist: nil)
+        playlistsRouter?.openPlaylist(nil)
     }
     
     @objc
@@ -92,11 +116,9 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
     // MARK: - Table Delegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-        // Navigate to the playlist
+        UIDevice.isPad ? tableView.singleSelect(at: indexPath) : tableView.deselectRow(at: indexPath, animated: true)
         let playlist = presenter.playlistsDataSource.items[indexPath.row]
-        openPlaylist(playlist: playlist)
+        playlistsRouter?.openPlaylist(playlist)
     }
     
     
@@ -175,11 +197,6 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
         return PlaylistViewController(presenter: playlistPresenter)
     }
     
-    func openPlaylist(playlist: Playlist?, animated: Bool = true) {
-        let playlistViewController = makePlaylistViewController(playlist: playlist)
-        navigationController?.pushViewController(playlistViewController, animated: animated)
-    }
-    
     
     // MARK: - Base Presenter Delegate
     
@@ -208,7 +225,7 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
         case .error:
             presenter.playlistsDataSource.refresh()
         case .empty:
-            openPlaylist(playlist: nil)
+            playlistsRouter?.openPlaylist(nil)
         default:
             return
         }
@@ -253,7 +270,7 @@ extension PlaylistsViewController: PlaylistsPresenterDelegate {
     func newPlaylistDidChange(_ playlist: Playlist?) {
         addButton.isEnabled = true
         if let playlist = playlist {
-            openPlaylist(playlist: playlist)
+            playlistsRouter?.openPlaylist(playlist)
         }
     }
 }
