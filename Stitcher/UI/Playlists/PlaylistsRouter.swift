@@ -22,22 +22,33 @@ final class PlaylistsRouter: PlaylistsViewControllerRouter {
     }
     
     func openPlaylist(_ playlist: Playlist?) {
-        // Prep the playlist controller
-        let playlistViewController = PlaylistViewController.make(withPlaylist: playlist)
-        
-        // If iPad search for container view controller
-        if UIDevice.isPad {
-            guard
-            let containerController = viewController.splitViewController as? ContainerViewController,
-            let navController = containerController.detailViewController else {
-                return
-            }
-            navController.setViewControllers([playlistViewController], animated: false)
-        } else {
-            guard let navController = viewController.navigationController else {
-                return
-            }
-            navController.pushViewController(playlistViewController, animated: true)
+        guard let containerController = viewController.splitViewController as? ContainerViewController else {
+            return
         }
+        
+        let playlistViewController = PlaylistViewController.make(withPlaylist: playlist)
+        switch containerController.viewControllers.count {
+        case 1:
+            openSingleView(playlistViewController: playlistViewController)
+        case 2:
+            openSplitView(playlistViewController: playlistViewController)
+        default:
+            return
+        }
+    }
+    
+    private func openSplitView(playlistViewController: PlaylistViewController) {
+        guard let containerController = viewController.splitViewController as? ContainerViewController,
+        let navController = containerController.detailViewController else {
+            return
+        }
+        navController.setViewControllers([playlistViewController], animated: false)
+    }
+    
+    private func openSingleView(playlistViewController: PlaylistViewController) {
+        guard let navController = viewController.navigationController else {
+            return
+        }
+        navController.pushViewController(playlistViewController, animated: true)
     }
 }
