@@ -8,7 +8,6 @@
 
 import Foundation
 import UIKit
-import DZNEmptyDataSet
 
 /// The base delegate for the presenter that is used to trigger changes in data.
 protocol BasePresenterDelegate: class {
@@ -43,7 +42,7 @@ class BasePresenter: NSObject {
     internal let spotifyApi: SpotifyApi
     
     /// Returns true if the user is authenticated.
-    internal(set) var isAuthenticated: Bool {
+    var isAuthenticated: Bool {
         didSet {
             guard oldValue != isAuthenticated else {
                 return
@@ -53,14 +52,14 @@ class BasePresenter: NSObject {
     }
     
     /// The current error experienced by the application, or nil, if there is no error.
-    internal(set) var error: String? {
+    var error: String? {
         didSet {
             delegate?.errorDidChange(error)
         }
     }
     
     /// Returns true if the application is currently doing some work.
-    internal(set) var isLoading: Bool = false {
+    var isLoading: Bool = false {
         didSet {
             delegate?.isLoadingChanged(isLoading)
         }
@@ -79,8 +78,8 @@ class BasePresenter: NSObject {
     }
     
     /// Makes a request to authrorize the app for Spotify via a system handler.
-    func login() {
-        spotifyApi.authorize()
+    func login(_ viewController: UIViewController) {
+        spotifyApi.authorize(viewController)
     }
 }
 

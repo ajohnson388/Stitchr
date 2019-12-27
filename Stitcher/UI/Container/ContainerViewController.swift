@@ -18,6 +18,13 @@ protocol PlaylistsViewControllerDelegate: class {
 /// The base view controller used in iPad and macOS
 final class ContainerViewController: UISplitViewController {
     
+    static func make() -> ContainerViewController {
+        let splitViewController = ContainerViewController()
+        splitViewController.preferredDisplayMode = .automatic
+        splitViewController.viewControllers = makeControllers()
+        return splitViewController
+    }
+    
     var detailViewController: UINavigationController? {
         guard self.viewControllers.count > 1 else {
             return nil
@@ -27,6 +34,19 @@ final class ContainerViewController: UISplitViewController {
     
     var masterViewController: UINavigationController? {
         return self.viewControllers.first as? UINavigationController
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        Theme.apply()
+    }
+    
+    private static func makeControllers() -> [UIViewController] {
+        var controllers = [UINavigationController(rootViewController: PlaylistsViewController.make())]
+        if UIDevice.isPad {
+            controllers.append(UINavigationController(rootViewController: PlaylistViewController.make()))
+        }
+        return controllers
     }
 }
 

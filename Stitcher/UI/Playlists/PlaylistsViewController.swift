@@ -9,15 +9,12 @@
 import Foundation
 import UIKit
 import SDWebImage
-import DZNEmptyDataSet
 
 protocol PlaylistsViewControllerObserver: class {
     func didSelectPlaylist(_ playlist: Playlist?)
     func didCreateNewPlaylist()
     func didDeletePlaylist()
 }
-
-
 
 final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>, UIViewControllerPreviewingDelegate {
     
@@ -56,12 +53,15 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        Theme.apply(navigationItem: navigationItem)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if presenter.isAuthenticated {
             presenter.playlistsDataSource.refresh()
+        } else {
+            reloadTable()
         }
     }
     
@@ -69,11 +69,10 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
         if let config = super.getEmptyStateConfig() {
             return config
         } else if presenter.playlistsDataSource.items.isEmpty {
-            var config = EmptyStateConfig()
-            config.state = .empty
-            config.title = Strings.playlistsEmptyTitle.localized.attributed
-            config.description = Strings.playlistsEmptyDescription.localized.attributed
-            config.buttonTitle = Strings.emptyPlaylistsButtonTitle.localized.attributed
+            var config = EmptyStateConfig.makeEmpty()
+            config.title = Strings.playlistsEmptyTitle.localized
+            config.description = Strings.playlistsEmptyDescription.localized
+            config.buttonTitle = Strings.emptyPlaylistsButtonTitle.localized
             return config
         } else {
             return nil
@@ -106,7 +105,7 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        ViewFactory.loadImage(presenter.playlistsDataSource.items[indexPath.row].images.last?.url, forCell: cell)
+        cell.loadImage(presenter.playlistsDataSource.items[indexPath.row].images.last?.url)
         if indexPath.row == tableView.numberOfRows(inSection: 0) - 1 {
             presenter.playlistsDataSource.loadMoreIfNeeded()
         }
@@ -161,10 +160,6 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
         // Add the refresh control
         tableView.refreshControl = UIRefreshControl()
         tableView.refreshControl?.addTarget(self, action: #selector(didRefreshTable), for: .valueChanged)
-        
-        // Configure for empty data sets
-        tableView.emptyDataSetDelegate = self
-        tableView.emptyDataSetSource = self
     }
     
     private func setupLogoImage() {
@@ -202,26 +197,26 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
     
     override func isUserAuthenticatedDidChange(_ isAuthenticated: Bool) {
         addButton.isEnabled = true
-        isAuthenticated ? presenter.playlistsDataSource.refresh() : tableView.reloadEmptyDataSet()
+        isAuthenticated ? presenter.playlistsDataSource.refresh() : reloadTable()
     }
     
     override func isLoadingChanged(_ isLoading: Bool) {
         if presenter.playlistsDataSource.items.isEmpty && isLoading {
-            tableView.reloadEmptyDataSet()
+            reloadTable()
         }
     }
     
     
     // MARK: - Empty State Delegate
     
-    override func emptyDataSet(_ scrollView: UIScrollView!, didTap button: UIButton!) {
+    override func onEmptyStateButtonTapped() {
         guard let state = getEmptyStateConfig()?.state else {
             return
         }
         
         switch state {
         case .authenticationChallenge:
-            presenter.login()
+            presenter.login(self)
         case .error:
             presenter.playlistsDataSource.refresh()
         case .empty:
@@ -256,15 +251,7 @@ extension PlaylistsViewController: PlaylistsPresenterDelegate {
     
     func playlistsDidChange(_ playlists: [Playlist]) {
         tableView.refreshControl?.endRefreshing()
-        
-        // Animate on first load
-        if tableView.numberOfRows(inSection: 0) == 0 {
-            tableView.beginUpdates()
-            tableView.reloadSections(IndexSet(integer: 0), with: .fade)
-            tableView.endUpdates()
-        } else {
-            tableView.reloadData()
-        }
+        reloadTable()
     }
     
     func newPlaylistDidChange(_ playlist: Playlist?) {

@@ -16,4 +16,13 @@ extension UITableView {
             deselectRow(at: indexPath, animated: false)
         }
     }
+    
+    var isEmpty: Bool {
+        for i in 0..<numberOfSections {
+            if numberOfRows(inSection: i) > 0 {
+                return false
+            }
+        }
+        return true
+    }
 }

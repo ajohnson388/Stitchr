@@ -35,15 +35,15 @@ final class SearchTableViewCell: UITableViewCell {
     private func setupView() {
         let rect = CGRect(x: 0, y: 0, width: 24, height: 24)
         holderView.frame = rect
-        holderView.layer.borderColor = Themes.current.accentColor.cgColor
+        holderView.layer.borderColor = Theme.buttonTextColor.color.cgColor
         holderView.layer.borderWidth = 1
         holderView.layer.cornerRadius = 8
-        holderView.layer.backgroundColor = Themes.current.accentColor.cgColor
+        holderView.layer.backgroundColor = Theme.buttonTextColor.color.cgColor
         accessoryView = holderView
         
         let padding = 1 as CGFloat
         holderView.addSubview(countLabel)
-        countLabel.textColor = Themes.current.ternaryLightColor
+        countLabel.textColor = Theme.tableViewTextColor.color
         countLabel.leftAnchor == holderView.leftAnchor + padding
         countLabel.rightAnchor == holderView.rightAnchor - padding
         countLabel.topAnchor == holderView.topAnchor - padding

@@ -40,8 +40,8 @@ final class EditTableView: UIView {
         editButtonView.trailingAnchor == trailingAnchor - padding
         
         editButtonView.setTitle(Strings.playlistReorderButtonTitle.localized, for: .normal)
-        editButtonView.setTitleColor(Themes.current.accentColor, for: .normal)
-        editButtonView.setTitleColor(Themes.current.accentColor.withAlphaComponent(0.2), for: .highlighted)
+        editButtonView.setTitleColor(Theme.buttonTextColor.color, for: .normal)
+        editButtonView.setTitleColor(Theme.buttonTextColor.color.withAlphaComponent(0.2), for: .highlighted)
         editButtonView.addTarget(self, action: #selector(onButtonTapped), for: .touchUpInside)
     }
     

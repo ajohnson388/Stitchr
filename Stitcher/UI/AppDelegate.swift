@@ -9,15 +9,18 @@
 import UIKit
 
 @UIApplicationMain
-
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        initApp()
-        addShortcutsIfNeeded(to: application)
-        return true
+        if #available(iOS 13.0, *) {
+            return true
+        } else {
+            initApp()
+            addShortcutsIfNeeded(to: application)
+            return true
+        }
     }
     
     func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
@@ -29,44 +32,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // TODO: Open new playlist
     }
     
+    private func initApp() {
+        window = UIWindow.make()
+        window?.initApp()
+    }
+    
     private func addShortcutsIfNeeded(to application: UIApplication) {
         if LocalCache().userCredentials != nil {
             addShortcuts(application: application)
         }
     }
-    
-    private func initApp() {
-        let deviceType = UIDevice.current.userInterfaceIdiom
-        switch deviceType {
-        case .pad:
-            let controller = makeContainerViewController()
-            initApp(withViewController: controller)
-        case .phone:
-            let controller = PlaylistsViewController.make()
-            let navController = UINavigationController(rootViewController: controller)
-            initApp(withViewController: navController)
-        default:
-            fatalError("\(deviceType) is not supported.")
-        }
-    }
-    
-    private func initApp(withViewController viewController: UIViewController) {
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window?.makeKeyAndVisible()
-        window?.rootViewController = viewController
-        Themes.current.apply()
-    }
-    
-    private func makeContainerViewController() -> ContainerViewController {
-        let splitViewController = ContainerViewController()
-        splitViewController.preferredDisplayMode = .allVisible
-        splitViewController.viewControllers = [
-            UINavigationController(rootViewController: PlaylistsViewController.make()),
-            UINavigationController(rootViewController: PlaylistViewController.make())
-        ]
-        return splitViewController
-    }
-    
+
     private func addShortcuts(application: UIApplication) {
         let createPlaylistShortcut = UIMutableApplicationShortcutItem(
             type: "CreatePlaylist",

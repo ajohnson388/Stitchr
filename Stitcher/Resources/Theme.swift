@@ -10,93 +10,78 @@ import Foundation
 import UIKit
 import SafariServices
 
-protocol Theme {
-    var primaryColor: UIColor { get }
-    var primaryLightColor: UIColor { get }
-    var primaryDarkColor: UIColor { get }
-    
-    var secondaryColor: UIColor { get }
-    var secondaryLightColor: UIColor { get }
-    var secondaryDarkColor: UIColor { get }
-    
-    var ternaryColor: UIColor { get }
-    var ternaryLightColor: UIColor { get }
-    var ternaryDarkColor: UIColor { get }
-    
-    var accentColor: UIColor { get }
+enum Theme: String {
+    case navigationBarColor = "NavigationBarColor"
+    case navigationBarTextColor = "NavigationBarTextColor"
+    case navigationBarButtonColor = "NavigationBarButtonColor"
+    case tableViewBackgroundColor = "TableViewBackgroundColor"
+    case tableViewCellColor = "TableViewCellColor"
+    case tableViewTextColor = "TableViewTextColor"
+    case buttonTextColor = "ButtonTextColor"
 }
 
 extension Theme {
     
-    func color(_ red: CGFloat, _ green: CGFloat, _ blue: CGFloat) -> UIColor {
-        return UIColor(red: red / 255, green: green / 255, blue: blue / 255, alpha: 1)
+    var color: UIColor {
+        return UIColor(named: self.rawValue)!
     }
     
-    func apply() {
-        // Buttons
-        UILabel.appearance(whenContainedInInstancesOf: [UIButton.self]).textColor = accentColor
-        UIBarButtonItem.appearance().tintColor = ternaryLightColor
-        
-        // Navigation bar
-        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor : ternaryLightColor]
-        UINavigationBar.appearance().largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : ternaryLightColor]
-        UINavigationBar.appearance().prefersLargeTitles = true
-        UINavigationBar.appearance().barTintColor = primaryDarkColor
-        UINavigationBar.appearance().tintColor = ternaryLightColor
-        UINavigationBar.appearance().isTranslucent = false
-
-        // Search bar
+    static func apply(navigationItem: UINavigationItem? = nil) {
+        Theme.applyButtonAppearance()
+        Theme.applyNavigationBarAppearance(navigationItem: navigationItem)
+        Theme.applySearchBarAppearance()
+        Theme.applyTableViewAppearance()
+    }
+    
+    private static func applyButtonAppearance() {
+        UILabel.appearance(whenContainedInInstancesOf: [UIButton.self]).textColor = Theme.buttonTextColor.color
+        UIBarButtonItem.appearance().tintColor = Theme.navigationBarButtonColor.color
+    }
+    
+    private static func applySearchBarAppearance() {
         UISearchBar.appearance().barStyle = .black
-        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: ternaryLightColor]
-        
-        // Table view
-        UITableView.appearance().backgroundColor = ternaryColor
-        UITableViewCell.appearance().backgroundColor = ternaryLightColor
-        
-        // Labels
-        UILabel.appearance(whenContainedInInstancesOf: [UITableViewHeaderFooterView.self]).textColor = color(109, 109, 114)
+        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes =
+            [.foregroundColor: Theme.navigationBarTextColor.color]
     }
     
-    func apply(safariViewController: SFSafariViewController) {
-        safariViewController.preferredControlTintColor = ternaryLightColor
-        safariViewController.preferredBarTintColor = primaryDarkColor
+    private static func applyTableViewAppearance() {
+        UITableView.appearance().backgroundColor = Theme.tableViewBackgroundColor.color
+        UITableViewCell.appearance().backgroundColor = Theme.tableViewCellColor.color
+        UILabel.appearance(whenContainedInInstancesOf: [UITableViewHeaderFooterView.self]).textColor =
+            Theme.tableViewTextColor.color
     }
-}
-
-struct Themes {
     
-    static var current: Theme = DarkTheme()
+    private static func applyNavigationBarAppearance(navigationItem: UINavigationItem? = nil) {
+        let appearance = UINavigationBar.appearance()
+        let textAttributes = [NSAttributedString.Key.foregroundColor: Theme.navigationBarTextColor.color]
+        
+        if #available(iOS 13.0, *) {
+            let buttonAppearance = UIBarButtonItemAppearance(style: .plain)
+            buttonAppearance.normal.titleTextAttributes = [.foregroundColor: Theme.navigationBarButtonColor.color]
+            
+            let navigationAppearance = UINavigationBarAppearance()
+            navigationAppearance.buttonAppearance = buttonAppearance
+            navigationAppearance.titleTextAttributes = textAttributes
+            navigationAppearance.largeTitleTextAttributes = textAttributes
+            navigationAppearance.backgroundColor = Theme.navigationBarColor.color
+            
+            navigationItem?.standardAppearance = navigationAppearance
+            navigationItem?.scrollEdgeAppearance = navigationAppearance
+            navigationItem?.compactAppearance = navigationAppearance
+            appearance.prefersLargeTitles = true
+            
+        } else {
+            appearance.titleTextAttributes = textAttributes
+            appearance.largeTitleTextAttributes = textAttributes
+            appearance.prefersLargeTitles = true
+            appearance.barTintColor = Theme.navigationBarColor.color
+            appearance.tintColor = Theme.navigationBarTextColor.color
+            appearance.isTranslucent = false
+        }
+    }
     
-    struct DarkTheme: Theme {
-        var primaryColor: UIColor {
-            return color(41, 42, 47)
-        }
-        var primaryLightColor: UIColor {
-            return color(81, 82, 88)
-        }
-        var primaryDarkColor: UIColor {
-            return color(0, 0, 5)
-        }
-        var secondaryColor: UIColor {
-            return color(64, 65, 69)
-        }
-        var secondaryLightColor: UIColor {
-            return color(107, 108, 112)
-        }
-        var secondaryDarkColor: UIColor {
-            return color(26, 27, 30)
-        }
-        var ternaryColor: UIColor {
-            return color(245, 245, 246)
-        }
-        var ternaryLightColor: UIColor {
-            return color(255, 255, 255)
-        }
-        var ternaryDarkColor: UIColor {
-            return color(225, 226, 225)
-        }
-        var accentColor: UIColor {
-            return color(132, 74, 168)
-        }
+    static func apply(safariViewController: SFSafariViewController) {
+        safariViewController.preferredControlTintColor = Theme.navigationBarTextColor.color
+        safariViewController.preferredBarTintColor = Theme.navigationBarColor.color
     }
 }

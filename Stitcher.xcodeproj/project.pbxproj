@@ -8,8 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		185872DF9970AABF3B98F9B6 /* Pods_StitcherTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F883D4210A32E56CA63AF017 /* Pods_StitcherTests.framework */; };
+		4202E4BE23B51CB4008BB78D /* UITableViewCell+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4202E4BD23B51CB4008BB78D /* UITableViewCell+Convenience.swift */; };
+		420373D623AEC4270000FD7D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 420373D523AEC4270000FD7D /* SceneDelegate.swift */; };
+		4213516C23A84097007F37A9 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4213516B23A84097007F37A9 /* EmptyView.swift */; };
 		421FDC8122C00B6F00726BE9 /* UIDevice+Identifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421FDC8022C00B6F00726BE9 /* UIDevice+Identifier.swift */; };
 		421FDC8322C01BA800726BE9 /* PlaylistsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421FDC8222C01BA800726BE9 /* PlaylistsRouter.swift */; };
+		4225768723B6553C005A4B09 /* UIWindow+Bootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4225768623B6553C005A4B09 /* UIWindow+Bootstrap.swift */; };
 		422D189822262432009321B8 /* PaginationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422D189722262432009321B8 /* PaginationDataSource.swift */; };
 		422D189A2226D74F009321B8 /* PlaylistsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422D18992226D74F009321B8 /* PlaylistsDataSource.swift */; };
 		422E8CFE2200FC770069BF1B /* Cancellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E8CFD2200FC770069BF1B /* Cancellable.swift */; };
@@ -17,6 +21,7 @@
 		422E8D02220365A00069BF1B /* EmptyStateConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E8D01220365A00069BF1B /* EmptyStateConfig.swift */; };
 		422E8D06220384380069BF1B /* BaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422E8D05220384380069BF1B /* BaseTableViewController.swift */; };
 		423283732213ABA2009A6C30 /* EditTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 423283722213ABA2009A6C30 /* EditTableView.swift */; };
+		4242885523A079D90028FD27 /* UIViewController+Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4242885423A079D90028FD27 /* UIViewController+Auth.swift */; };
 		424EFF1821F8DB2C00DDB4E5 /* SpotifyApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424EFF1721F8DB2C00DDB4E5 /* SpotifyApi.swift */; };
 		424EFF1E21F8E1F700DDB4E5 /* TokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424EFF1D21F8E1F700DDB4E5 /* TokenResponse.swift */; };
 		424EFF2021F8E3D600DDB4E5 /* Codable+Conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424EFF1F21F8E3D600DDB4E5 /* Codable+Conversion.swift */; };
@@ -90,8 +95,12 @@
 		099F734F4D3D8B4CF45C3B3A /* Pods-StitcherUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StitcherUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-StitcherUITests/Pods-StitcherUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		1DFBDE42F6027E791AF59F79 /* Pods-StitcherTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StitcherTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-StitcherTests/Pods-StitcherTests.debug.xcconfig"; sourceTree = "<group>"; };
 		259D5FC17BDA19BBCEE67BDE /* Pods-Stitcher.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stitcher.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Stitcher/Pods-Stitcher.debug.xcconfig"; sourceTree = "<group>"; };
+		4202E4BD23B51CB4008BB78D /* UITableViewCell+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Convenience.swift"; sourceTree = "<group>"; };
+		420373D523AEC4270000FD7D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		4213516B23A84097007F37A9 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		421FDC8022C00B6F00726BE9 /* UIDevice+Identifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Identifier.swift"; sourceTree = "<group>"; };
 		421FDC8222C01BA800726BE9 /* PlaylistsRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsRouter.swift; sourceTree = "<group>"; };
+		4225768623B6553C005A4B09 /* UIWindow+Bootstrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Bootstrap.swift"; sourceTree = "<group>"; };
 		422D189722262432009321B8 /* PaginationDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginationDataSource.swift; sourceTree = "<group>"; };
 		422D18992226D74F009321B8 /* PlaylistsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsDataSource.swift; sourceTree = "<group>"; };
 		422E8CFD2200FC770069BF1B /* Cancellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cancellable.swift; sourceTree = "<group>"; };
@@ -99,6 +108,7 @@
 		422E8D01220365A00069BF1B /* EmptyStateConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateConfig.swift; sourceTree = "<group>"; };
 		422E8D05220384380069BF1B /* BaseTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewController.swift; sourceTree = "<group>"; };
 		423283722213ABA2009A6C30 /* EditTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTableView.swift; sourceTree = "<group>"; };
+		4242885423A079D90028FD27 /* UIViewController+Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Auth.swift"; sourceTree = "<group>"; };
 		424EFF1721F8DB2C00DDB4E5 /* SpotifyApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyApi.swift; sourceTree = "<group>"; };
 		424EFF1D21F8E1F700DDB4E5 /* TokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenResponse.swift; sourceTree = "<group>"; };
 		424EFF1F21F8E3D600DDB4E5 /* Codable+Conversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Codable+Conversion.swift"; sourceTree = "<group>"; };
@@ -209,6 +219,7 @@
 				422E8CFF22010D160069BF1B /* BasePresenter.swift */,
 				42DCE73121FCF01D00218637 /* ViewFactory.swift */,
 				423283722213ABA2009A6C30 /* EditTableView.swift */,
+				4213516B23A84097007F37A9 /* EmptyView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -241,6 +252,9 @@
 				42AEA87B2200A58800B59EC6 /* String+Attributed.swift */,
 				421FDC8022C00B6F00726BE9 /* UIDevice+Identifier.swift */,
 				425F223022DB94C200567CC4 /* UITableView+Convenience.swift */,
+				4242885423A079D90028FD27 /* UIViewController+Auth.swift */,
+				4202E4BD23B51CB4008BB78D /* UITableViewCell+Convenience.swift */,
+				4225768623B6553C005A4B09 /* UIWindow+Bootstrap.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -286,6 +300,7 @@
 				422E8D072203894F0069BF1B /* Common */,
 				42EA312621FB972200A6E9F0 /* Playlist */,
 				424EFF3C21F9658F00DDB4E5 /* Playlists */,
+				420373D523AEC4270000FD7D /* SceneDelegate.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -639,16 +654,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4242885523A079D90028FD27 /* UIViewController+Auth.swift in Sources */,
 				42D3EF47220769EF005BDB8F /* BuildConfig.swift in Sources */,
 				422E8CFE2200FC770069BF1B /* Cancellable.swift in Sources */,
 				424EFF2021F8E3D600DDB4E5 /* Codable+Conversion.swift in Sources */,
 				42AEA87121FFE33300B59EC6 /* Collection+Count.swift in Sources */,
+				4202E4BE23B51CB4008BB78D /* UITableViewCell+Convenience.swift in Sources */,
 				42757BB72211E2E400576D71 /* EditPlaylistViewController.swift in Sources */,
 				423283732213ABA2009A6C30 /* EditTableView.swift in Sources */,
 				42EA313221FB9BFE00A6E9F0 /* ExternalIds.swift in Sources */,
 				42AEA87E2200B48200B59EC6 /* CacheDelegate.swift in Sources */,
 				42EA312C21FB9B3E00A6E9F0 /* Track.swift in Sources */,
 				424EFF3021F9328D00DDB4E5 /* TokenStore.swift in Sources */,
+				420373D623AEC4270000FD7D /* SceneDelegate.swift in Sources */,
 				42B93EDD22B9A3AA0060D857 /* ContainerViewController.swift in Sources */,
 				424EFF2221F8E53C00DDB4E5 /* Logger.swift in Sources */,
 				422E8D06220384380069BF1B /* BaseTableViewController.swift in Sources */,
@@ -671,6 +689,7 @@
 				424EFF3B21F94BC900DDB4E5 /* Image.swift in Sources */,
 				424EFF1821F8DB2C00DDB4E5 /* SpotifyApi.swift in Sources */,
 				424EFF3721F94B2A00DDB4E5 /* ExternalUrls.swift in Sources */,
+				4213516C23A84097007F37A9 /* EmptyView.swift in Sources */,
 				42AEA87A2200A2E400B59EC6 /* Images.swift in Sources */,
 				42AEA8802200B49200B59EC6 /* LocalCache.swift in Sources */,
 				421FDC8322C01BA800726BE9 /* PlaylistsRouter.swift in Sources */,
@@ -679,6 +698,7 @@
 				42EA313421FB9C4000A6E9F0 /* TrackItem.swift in Sources */,
 				42AEA8782200A1E500B59EC6 /* Strings.swift in Sources */,
 				425F223122DB94C200567CC4 /* UITableView+Convenience.swift in Sources */,
+				4225768723B6553C005A4B09 /* UIWindow+Bootstrap.swift in Sources */,
 				424EFF3321F93B2500DDB4E5 /* Cache.swift in Sources */,
 				424EFF3921F94B3C00DDB4E5 /* Owner.swift in Sources */,
 				42EA312821FB974A00A6E9F0 /* PlaylistViewController.swift in Sources */,
@@ -796,7 +816,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -852,7 +872,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -871,6 +891,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 5YPTGTC4JC;
 				INFOPLIST_FILE = Stitcher/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -878,7 +899,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.andyjohnson.stitchr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -892,6 +913,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 5YPTGTC4JC;
 				INFOPLIST_FILE = Stitcher/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -899,7 +921,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.andyjohnson.stitchr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -920,7 +942,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.meaningless.StitcherTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Stitcher.app/Stitcher";
 			};
@@ -942,7 +964,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.meaningless.StitcherTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Stitcher.app/Stitcher";
 			};
@@ -963,7 +985,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.meaningless.StitcherUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Stitcher;
 			};
@@ -984,7 +1006,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.meaningless.StitcherUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Stitcher;
 			};

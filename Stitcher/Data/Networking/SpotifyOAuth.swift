@@ -9,6 +9,8 @@
 import Foundation
 import Alamofire
 import SafariServices
+import AuthenticationServices
+import UIKit
 
 protocol SpotifyOAuthDelegate: class {
     func didAuthorizeSpoitfy(_ isAuthorized: Bool)
@@ -39,7 +41,7 @@ final class SpotifyOAuth {
     ]
     
     private let cache: Cache
-    private var session: SFAuthenticationSession?
+    private var session: ASWebAuthenticationSession?
     private var credentials: TokenStore? = LocalCache().userCredentials {
         didSet {
             cache.userCredentials = credentials
@@ -61,8 +63,19 @@ final class SpotifyOAuth {
     // MARK: - Public Functions
     
     /// Makes a request to authorize Spotify for SSO.
-    func authorizeSpotify() {
-        session = makeAuthSession()
+    func authorizeSpotify(_ viewController: UIViewController) {
+        let parameters = [
+            "client_id": BuildConfig.spotifyClientId,
+            "response_type": "code",
+            "redirect_uri": SpotifyOAuth.redirectUri,
+            "scope": SpotifyOAuth.permissionScopes.joined(separator: " ")
+        ]
+        let scheme = "com.andyjohnson.stitchr://"
+        let url = makeUrl(endpoint: "authorize", withQueryParameters: parameters)
+        self.session = ASWebAuthenticationSession(url: url, callbackURLScheme: scheme, completionHandler: onSpotifyAuthorized)
+        if #available(iOS 13.0, *) {
+            session?.presentationContextProvider = viewController
+        }
         session?.start()
     }
     
@@ -221,6 +234,10 @@ final class SpotifyOAuth {
     }
     
     private func onSpotifyAuthorized(url: URL?, error: Error?) {
+        if let error = error {
+            print(error)
+            return
+        }
         guard let code = url?.query?.split(separator: "=").last else {
             return
         }
@@ -330,18 +347,5 @@ final class SpotifyOAuth {
     private func makeUrl(endpoint: String = "api/token", withQueryParameters parameters: [String: String] = [:]) -> URL {
         let urlString = SpotifyOAuth.accountsBaseUrl +  endpoint + makeQueryString(fromParameters: parameters)
         return URL(string: urlString)!
-    }
-    
-    private func makeAuthSession() -> SFAuthenticationSession {
-        let parameters = [
-            "client_id": BuildConfig.spotifyClientId,
-            "response_type": "code",
-            "redirect_uri": SpotifyOAuth.redirectUri,
-            "scope": SpotifyOAuth.permissionScopes.joined(separator: " ")
-        ]
-        let scheme = "com.andyjohnson.stitchr://"
-        let url = makeUrl(endpoint: "authorize", withQueryParameters: parameters)
-        let session = SFAuthenticationSession(url: url, callbackURLScheme: scheme, completionHandler: onSpotifyAuthorized)
-        return session
     }
 }

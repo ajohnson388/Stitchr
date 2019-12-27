@@ -38,6 +38,7 @@ final class EditPlaylistViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        Theme.apply(navigationItem: navigationItem)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -51,14 +52,14 @@ final class EditPlaylistViewController: UIViewController {
     }
     
     private func setupView() {
-        containerView.backgroundColor = Themes.current.primaryDarkColor
-        navigationItem.largeTitleDisplayMode = .never
+        containerView.backgroundColor = Theme.navigationBarColor.color
         titleTextField.text = presenter.playlist?.name ?? Strings.newPlaylistTitle.localized
         titleTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         
         navigationItem.leftBarButtonItem = cancelButton
         navigationItem.rightBarButtonItem = saveButton
         navigationItem.hidesBackButton = true
+        navigationItem.largeTitleDisplayMode = .never
     }
     
     @objc

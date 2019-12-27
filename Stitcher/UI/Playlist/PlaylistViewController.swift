@@ -9,7 +9,6 @@
 import Foundation
 import UIKit
 import SDWebImage
-import DZNEmptyDataSet
 
 /**
     The user interface for adding, re-ordering, and remove tacks in a playlist.
@@ -51,6 +50,7 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
         super.viewDidLoad()
         setupView()
         presenter.tracksDataSource.refresh()
+        Theme.apply(navigationItem: navigationItem)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -64,18 +64,16 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
         if let config = super.getEmptyStateConfig() {
             return config
         } else if presenter.searchDataSource.items.isEmpty && isSearching {
-            var config = EmptyStateConfig()
+            var config = EmptyStateConfig.makeEmpty()
             let searchText = navigationItem.searchController?.searchBar.text ?? ""
-            config.state = .empty
-            config.title = (Strings.searchResultsEmptyTitle.localized + "\"\(searchText)\"").attributed
-            config.description = Strings.searchResultsDescription.localized.attributed
+            config.title = (Strings.searchResultsEmptyTitle.localized + "\"\(searchText)\"")
+            config.description = Strings.searchResultsDescription.localized
             return config
         } else if presenter.tracksDataSource.items.isEmpty && !isSearching {
-            var config = EmptyStateConfig()
-            config.state = .empty
-            config.buttonTitle = Strings.tracksEmptyButtonTitle.localized.attributed
-            config.description = Strings.tracksEmptyDescription.localized.attributed
-            config.title = Strings.tracksEmptyTitle.localized.attributed
+            var config = EmptyStateConfig.makeEmpty()
+            config.buttonTitle = Strings.tracksEmptyButtonTitle.localized
+            config.description = Strings.tracksEmptyDescription.localized
+            config.title = Strings.tracksEmptyTitle.localized
             return config
         } else {
             return nil
@@ -105,7 +103,7 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         // Load images if needed
         let track = isSearching ? presenter.searchDataSource.items[indexPath.row] : presenter.tracksDataSource.items[indexPath.row].track
-        ViewFactory.loadImage(track?.album.images.last?.url, forCell: cell)
+        cell.loadImage(track?.album.images.last?.url)
         
         // Fetch more items if needed
         if isSearching && indexPath.row == presenter.searchDataSource.items.count - 1 {
@@ -157,7 +155,7 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
                 : self.presenter.removeTrack(at: indexPath.row, completion: completionHandler)
         }
         action.image = isSearching ? Images.add.make() : Images.delete.make()
-        action.backgroundColor = Themes.current.secondaryLightColor
+        action.backgroundColor = Theme.buttonTextColor.color
         return UISwipeActionsConfiguration(actions: [action])
     }
     
@@ -234,10 +232,6 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
         searchController.searchBar.placeholder = Strings.searchPlaceholder.localized
         navigationItem.searchController = searchController
         definesPresentationContext = true
-        
-        // Setup tableview
-        tableView.emptyDataSetSource = self
-        tableView.emptyDataSetDelegate = self
     }
     
     private var isReorderControlHidden: Bool {
@@ -272,14 +266,14 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
     
     // MARK: - Empty State Delegate
     
-    override func emptyDataSet(_ scrollView: UIScrollView!, didTap button: UIButton!) {
+    override func onEmptyStateButtonTapped() {
         guard let state = getEmptyStateConfig()?.state else {
             return
         }
         
         switch state {
         case .authenticationChallenge:
-            presenter.login()
+            presenter.login(self)
         case .error:
             presenter.tracksDataSource.refresh()
             break
@@ -298,20 +292,20 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
     }
     
     func didDismissSearchController(_ searchController: UISearchController) {
-        tableView.reloadData()
         isReorderControlHidden = presenter.tracksDataSource.items.count == 0
+        reloadTable()
     }
     
     
     // MARK: - Base Presenter Delegate
     
     override func isUserAuthenticatedDidChange(_ isAuthenticated: Bool) {
-        isAuthenticated ? presenter.tracksDataSource.refresh() : tableView.reloadData()
+        isAuthenticated ? presenter.tracksDataSource.refresh() : reloadTable()
     }
     
     override func isLoadingChanged(_ isLoading: Bool) {
         if (presenter.tracksDataSource.items.isEmpty || presenter.searchDataSource.items.isEmpty) && isLoading {
-            tableView.reloadData()
+            reloadTable()
         }
     }
 }
@@ -322,20 +316,13 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
 extension PlaylistViewController: PlaylistPresenterDelegate {
     
     func tracksDidChange(_ tracks: [TrackItem]) {
-        if tableView.numberOfRows(inSection: 0) == 0 {
-            tableView.beginUpdates()
-            tableView.reloadSections(IndexSet(integer: 0), with: .fade)
-            tableView.endUpdates()
-        } else {
-            tableView.reloadData()
-        }
-        
         isReorderControlHidden = tracks.count == 0 || isSearching
+        reloadTable()
     }
     
     func searchResultsDidChange(_ tracks: [Track]) {
         isReorderControlHidden = true
-        tableView.reloadData()
+        reloadTable()
     }
 }
 

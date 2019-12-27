@@ -8,14 +8,18 @@
 
 import Foundation
 import UIKit
-import DZNEmptyDataSet
+import Anchorage
 
-class BaseTableViewController<T>: UITableViewController, DZNEmptyDataSetSource,
-    DZNEmptyDataSetDelegate, BasePresenterDelegate where T: BasePresenter {
+/// Provides basic behavior for interacting with a base presenter and showing or hiding empty table states.
+class BaseTableViewController<T>: UITableViewController, BasePresenterDelegate where T: BasePresenter {
     
     // MARK: - Properties
     
+    let emptyView = EmptyView(frame: .null)
     let presenter: T
+    
+    
+    // MARK: - Lifecycle
     
     init(presenter: T) {
         self.presenter = presenter
@@ -27,83 +31,74 @@ class BaseTableViewController<T>: UITableViewController, DZNEmptyDataSetSource,
         fatalError("init(coder:) has not been implemented")
     }
     
-    func getEmptyStateConfig() -> EmptyStateConfig? {
-        var config = EmptyStateConfig()
-        if !presenter.isAuthenticated {
-            config.state = .authenticationChallenge
-            config.title = Strings.loginRequiredTitle.localized.attributed
-            config.description = Strings.loginRequiredDescription.localized.attributed
-            config.image = Images.spotifyLogo.make()
-            config.buttonTitle = Strings.loginRequiredButtonTitle.localized.attributed
-        } else if presenter.isLoading {
-            config.state = .loading
-            config.image = Images.loadingImage
-        } else if let error = presenter.error {
-            config.state = .error
-            config.title = Strings.errorTitle.localized.attributed
-            config.description = error.attributed
-            config.buttonTitle = Strings.errorButtonTitle.localized.attributed
-        } else {
-            return nil
-        }
-        return config
-    }
-    
-    
-    func isUserAuthenticatedDidChange(_ isAuthenticated: Bool) {}
-    func isLoadingChanged(_ isLoading: Bool) {}
-    
-    func errorDidChange(_ error: String?) {
-        if error != nil {
-            tableView.reloadEmptyDataSet()
-        }
-    }
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delaysContentTouches = false
     }
     
     
-    // MARK: - Empty Delegate
+    // MARK: - TableView Methods
     
-    func emptyDataSetShouldAllowScroll(_ scrollView: UIScrollView!) -> Bool {
-        return presenter.isAuthenticated
-    }
-    
-    func emptyDataSet(_ scrollView: UIScrollView!, didTap button: UIButton!) {
-        
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
     }
     
     
-    // MARK: - Empty Data Source
+    // MARK: - Helper Functions
     
-    func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
-        return getEmptyStateConfig()?.title
-    }
-    
-    func description(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
-        return getEmptyStateConfig()?.description
-    }
-    
-    func backgroundColor(forEmptyDataSet scrollView: UIScrollView!) -> UIColor! {
-        return UITableView.appearance().backgroundColor
-    }
-    
-    func image(forEmptyDataSet scrollView: UIScrollView!) -> UIImage! {
-        return getEmptyStateConfig()?.image
-    }
-    
-    func buttonTitle(forEmptyDataSet scrollView: UIScrollView!, for state: UIControl.State) -> NSAttributedString! {
-        guard let title = getEmptyStateConfig()?.buttonTitle?.string else {
+    func getEmptyStateConfig() -> EmptyStateConfig? {
+        if !presenter.isAuthenticated {
+            return EmptyStateConfig.makeAuthorization()
+        } else if presenter.isLoading {
+            return EmptyStateConfig.makeLoading()
+        } else if let error = presenter.error {
+            return EmptyStateConfig.makeError(message: error)
+        } else {
             return nil
         }
-        let color = Themes.current.accentColor
-        let textColor = [NSAttributedString.Key.foregroundColor: state == .highlighted ? color.withAlphaComponent(0.2) : color]
-        return NSAttributedString(string: title, attributes: textColor)
+    }
+    
+    func showEmptyState() {
+        guard let config = getEmptyStateConfig() else {
+            return
+        }
+        tableView.backgroundView = emptyView
+        tableView.isScrollEnabled = presenter.isAuthenticated
+        emptyView.buttonTitle = config.buttonTitle
+        emptyView.image = config.image
+        emptyView.subtitle = config.description
+        emptyView.title = config.title
+        emptyView.setButtonListener(onButtonTapped: onEmptyStateButtonTapped)
+    }
+    
+    func hideEmptyState() {
+        tableView.backgroundView = nil
+        tableView.isScrollEnabled = true
+    }
+    
+    func reloadTable() {
+        if tableView.numberOfSections == 1 && tableView.numberOfRows(inSection: 0) == 0 {
+            tableView.beginUpdates()
+            tableView.reloadSections(IndexSet(integer: 0), with: .fade)
+            tableView.endUpdates()
+        } else {
+            tableView.reloadData()
+        }
+        tableView.isEmpty ? showEmptyState() : hideEmptyState()
+    }
+    
+    
+    // MARK: - Delegates
+    
+    func isUserAuthenticatedDidChange(_ isAuthenticated: Bool) {}
+    func isLoadingChanged(_ isLoading: Bool) {}
+    func errorDidChange(_ error: String?) {
+        if error != nil {
+            reloadTable()
+        }
+    }
+    
+    func onEmptyStateButtonTapped() {
+        
     }
 }

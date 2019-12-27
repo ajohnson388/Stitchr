@@ -9,6 +9,7 @@
 import Foundation
 import Alamofire
 import SafariServices
+import UIKit
 
 
 /// An implmentation of the Spotify API used for making authenticated requests.
@@ -38,8 +39,8 @@ final class SpotifyApi {
     // MARK: - API
     
     /// Makes a request to authorize Spotify via system level authentication.
-    func authorize() {
-        spotifyOAuth.authorizeSpotify()
+    func authorize(_ viewController: UIViewController) {
+        spotifyOAuth.authorizeSpotify(viewController)
     }
     
     /// Fetches the profile of the current user.

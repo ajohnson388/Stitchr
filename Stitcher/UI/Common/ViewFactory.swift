@@ -47,10 +47,4 @@ struct ViewFactory {
         cell.setOccurrences(occurrences)
         return cell
     }
-    
-    static func loadImage(_ imageUrlString: String?, forCell cell: UITableViewCell) {
-        let imageUrl = imageUrlString == nil ? nil : try? imageUrlString!.asURL()
-        cell.imageView?.sd_setImage(with: imageUrl, placeholderImage: Images.imagePlaceholder.make(),
-                                    options: [SDWebImageOptions.progressiveDownload, SDWebImageOptions.continueInBackground])
-    }
 }
