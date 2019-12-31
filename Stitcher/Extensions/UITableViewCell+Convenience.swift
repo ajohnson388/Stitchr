@@ -8,14 +8,29 @@
 
 import Foundation
 import UIKit
-import SDWebImage
+import Nuke
+import SkeletonView
 
 extension UITableViewCell {
     
-    func loadImage(_ imageUrlString: String?) {
-        let imageUrl = imageUrlString == nil ? nil : try? imageUrlString!.asURL()
-        imageView?.sd_setImage(with: imageUrl,
-                               placeholderImage: Images.imagePlaceholder.make(),
-                               options: [.progressiveDownload, .continueInBackground])
-    }
+    func setImage(urlString: String?) {
+        guard let imageView = (self as? FixedImageTableViewCell)?.fixedImageView else {
+            return
+        }
+        
+        guard let urlString = urlString, let url = URL(string: urlString) else {
+            imageView.image = Images.imagePlaceholder.make()
+            return
+        }
+        
+        imageView.isSkeletonable = true
+        imageView.showAnimatedSkeleton()
+        let options = ImageLoadingOptions(placeholder: Images.imagePlaceholder.make(),
+                                          transition: .none,
+                                          failureImage: Images.imagePlaceholder.make(),
+                                          failureImageTransition: .none)
+        Nuke.loadImage(with: url, options: options, into: imageView, progress: nil) { _ in
+            imageView.hideSkeleton()
+        }
+     }
 }

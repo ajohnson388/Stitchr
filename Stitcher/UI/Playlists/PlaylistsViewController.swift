@@ -8,7 +8,6 @@
 
 import Foundation
 import UIKit
-import SDWebImage
 
 protocol PlaylistsViewControllerObserver: class {
     func didSelectPlaylist(_ playlist: Playlist?)
@@ -101,11 +100,10 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let playlist = presenter.playlistsDataSource.items[indexPath.row]
-        return ViewFactory.makePlaylistTableViewCell(tableView, indexPath: indexPath, playlist: playlist)
+        return tableView.makePlaylistCell(playlist)
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        cell.loadImage(presenter.playlistsDataSource.items[indexPath.row].images.last?.url)
         if indexPath.row == tableView.numberOfRows(inSection: 0) - 1 {
             presenter.playlistsDataSource.loadMoreIfNeeded()
         }
@@ -118,6 +116,10 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
         UIDevice.isPad ? tableView.singleSelect(at: indexPath) : tableView.deselectRow(at: indexPath, animated: true)
         let playlist = presenter.playlistsDataSource.items[indexPath.row]
         playlistsRouter?.openPlaylist(playlist)
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60
     }
     
     

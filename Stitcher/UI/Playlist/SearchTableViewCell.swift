@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import Anchorage
 
-final class SearchTableViewCell: UITableViewCell {
+final class SearchTableViewCell: FixedImageTableViewCell {
     
     // MARK: - Properties
     
@@ -43,7 +43,7 @@ final class SearchTableViewCell: UITableViewCell {
         
         let padding = 1 as CGFloat
         holderView.addSubview(countLabel)
-        countLabel.textColor = Theme.tableViewTextColor.color
+        countLabel.textColor = UIColor.white
         countLabel.leftAnchor == holderView.leftAnchor + padding
         countLabel.rightAnchor == holderView.rightAnchor - padding
         countLabel.topAnchor == holderView.topAnchor - padding

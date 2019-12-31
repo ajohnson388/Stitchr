@@ -10,8 +10,9 @@ target 'Stitcher' do
   # Pods for Stitcher
   pod 'Anchorage', '~> 4.3'
   pod 'Alamofire', '~> 4.8'
-  pod 'SDWebImage', '~> 4.4'
   pod 'Hero' 
+  pod 'Nuke', '~> 8.4'
+  pod 'SkeletonView'
 
   target 'StitcherTests' do
     inherit! :search_paths

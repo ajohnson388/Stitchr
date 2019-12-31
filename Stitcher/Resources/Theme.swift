@@ -79,9 +79,4 @@ extension Theme {
             appearance.isTranslucent = false
         }
     }
-    
-    static func apply(safariViewController: SFSafariViewController) {
-        safariViewController.preferredControlTintColor = Theme.navigationBarTextColor.color
-        safariViewController.preferredBarTintColor = Theme.navigationBarColor.color
-    }
 }

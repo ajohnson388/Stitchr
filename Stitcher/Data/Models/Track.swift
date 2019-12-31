@@ -25,4 +25,10 @@ struct Track: Codable, Equatable {
     let trackNumber: Int
     let type: String
     let uri: String
+    
+    var sourceDescription: String {
+        return [artists.first?.name, album.name]
+            .compactMap({ $0 })
+            .joined(separator: " • ")
+    }
 }

@@ -2,29 +2,32 @@ PODS:
   - Alamofire (4.8.1)
   - Anchorage (4.3)
   - Hero (1.4.0)
-  - SDWebImage (4.4.3):
-    - SDWebImage/Core (= 4.4.3)
-  - SDWebImage/Core (4.4.3)
+  - Nuke (8.4.0)
+  - SkeletonView (1.8.2)
 
 DEPENDENCIES:
   - Alamofire (~> 4.8)
   - Anchorage (~> 4.3)
   - Hero
-  - SDWebImage (~> 4.4)
+  - Nuke (~> 8.4)
+  - SkeletonView
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - Alamofire
     - Anchorage
     - Hero
-    - SDWebImage
+  trunk:
+    - Nuke
+    - SkeletonView
 
 SPEC CHECKSUMS:
   Alamofire: 16ce2c353fb72865124ddae8a57c5942388f4f11
   Anchorage: 21a98675245188427f0bcea21404d42a824a766f
   Hero: bac92350d7201a1a940003e0767c7b52ce7c99a1
-  SDWebImage: c5594f1a19c48d526d321e548902b56b479cd508
+  Nuke: fa6f784c4f7e1c0f9313668510186c68b7af2509
+  SkeletonView: bb27c39857e5492136f02ee8a3aa78de55d12ecd
 
-PODFILE CHECKSUM: b43f92361dc9e116f2dced5e94d37c37f724f034
+PODFILE CHECKSUM: b27446d47c40d806265b0fd5dd0cce3680f3b766
 
 COCOAPODS: 1.8.4

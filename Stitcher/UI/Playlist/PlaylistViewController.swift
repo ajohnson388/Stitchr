@@ -8,7 +8,6 @@
 
 import Foundation
 import UIKit
-import SDWebImage
 
 /**
     The user interface for adding, re-ordering, and remove tacks in a playlist.
@@ -94,16 +93,16 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
         if isSearching {
             let track = presenter.searchDataSource.items[indexPath.row]
             let occurrences = presenter.tracksDataSource.items.count(where: { $0.track?.uri == track.uri })
-            return ViewFactory.makeSearchTableViewCell(tableView, indexPath: indexPath, track: track, occurrences: occurrences)
+            return tableView.makeSearchCell(track: track, occurrences: occurrences)
         } else {
-            return ViewFactory.makeTrackTableViewCell(tableView, indexPath: indexPath, track: presenter.tracksDataSource.items[indexPath.row].track)
+            let track = presenter.tracksDataSource.items[indexPath.row].track
+            return tableView.makeTrackCell(track)
         }
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         // Load images if needed
         let track = isSearching ? presenter.searchDataSource.items[indexPath.row] : presenter.tracksDataSource.items[indexPath.row].track
-        cell.loadImage(track?.album.images.last?.url)
         
         // Fetch more items if needed
         if isSearching && indexPath.row == presenter.searchDataSource.items.count - 1 {
