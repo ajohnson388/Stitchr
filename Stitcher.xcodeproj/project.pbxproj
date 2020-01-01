@@ -57,7 +57,6 @@
 		42CE584321F8CFB100555CA0 /* StitcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CE584221F8CFB100555CA0 /* StitcherTests.swift */; };
 		42CE584E21F8CFB100555CA0 /* StitcherUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CE584D21F8CFB100555CA0 /* StitcherUITests.swift */; };
 		42D3EF47220769EF005BDB8F /* BuildConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D3EF46220769EF005BDB8F /* BuildConfig.swift */; };
-		42DB39B923BA4E2400F2ED34 /* UIImage+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DB39B823BA4E2400F2ED34 /* UIImage+Convenience.swift */; };
 		42DC38BE23BBA42900057FAB /* FixedImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DC38BD23BBA42900057FAB /* FixedImageTableViewCell.swift */; };
 		42E26DC422287A0900A81536 /* TracksDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E26DC322287A0900A81536 /* TracksDataSource.swift */; };
 		42E26DC622287ABC00A81536 /* SearchDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E26DC522287ABC00A81536 /* SearchDataSource.swift */; };
@@ -152,7 +151,6 @@
 		42CE584F21F8CFB100555CA0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		42D3EF4522076814005BDB8F /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		42D3EF46220769EF005BDB8F /* BuildConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildConfig.swift; sourceTree = "<group>"; };
-		42DB39B823BA4E2400F2ED34 /* UIImage+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Convenience.swift"; sourceTree = "<group>"; };
 		42DC38BD23BBA42900057FAB /* FixedImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixedImageTableViewCell.swift; sourceTree = "<group>"; };
 		42E26DC322287A0900A81536 /* TracksDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TracksDataSource.swift; sourceTree = "<group>"; };
 		42E26DC522287ABC00A81536 /* SearchDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchDataSource.swift; sourceTree = "<group>"; };
@@ -257,7 +255,6 @@
 				4242885423A079D90028FD27 /* UIViewController+Auth.swift */,
 				4202E4BD23B51CB4008BB78D /* UITableViewCell+Convenience.swift */,
 				4225768623B6553C005A4B09 /* UIWindow+Bootstrap.swift */,
-				42DB39B823BA4E2400F2ED34 /* UIImage+Convenience.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -662,7 +659,6 @@
 				422E8CFE2200FC770069BF1B /* Cancellable.swift in Sources */,
 				424EFF2021F8E3D600DDB4E5 /* Codable+Conversion.swift in Sources */,
 				42AEA87121FFE33300B59EC6 /* Collection+Count.swift in Sources */,
-				42DB39B923BA4E2400F2ED34 /* UIImage+Convenience.swift in Sources */,
 				4202E4BE23B51CB4008BB78D /* UITableViewCell+Convenience.swift in Sources */,
 				42757BB72211E2E400576D71 /* EditPlaylistViewController.swift in Sources */,
 				423283732213ABA2009A6C30 /* EditTableView.swift in Sources */,

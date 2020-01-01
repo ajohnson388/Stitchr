@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 import AuthenticationServices
 
-@available(iOS 12.0, *)
 extension UIViewController: ASWebAuthenticationPresentationContextProviding {
     
     public func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
