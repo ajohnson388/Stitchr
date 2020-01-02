@@ -11,6 +11,19 @@ import Alamofire
 import SafariServices
 import UIKit
 
+protocol NetworkApi {
+    func authorize(_ viewController: UIViewController)
+    func getUserProfile(completion: @escaping (UserProfile?) -> ())
+    func getPlaylist(withId id: String, fields: [String]?, completion: @escaping (Playlist?) -> ())
+    func getPlaylists(offset: Int, limit: Int, completion: @escaping (PagingResponse<Playlist>?) -> ())
+    func getPlaylistTracks(playlistId: String, offset: Int, limit: Int, completion: @escaping (PagingResponse<TrackItem>?) -> ())
+    func searchTracks(searchTerm: String, offset: Int, limit: Int, completion: @escaping (SearchResponse?) -> ()) -> Cancellable?
+    func createPlaylist(name: String, completion: @escaping (Playlist?) -> ())
+    func addTracksToPlaylist(withId id: String, uris: [String], completion: @escaping (SnapshotResponse?) -> ())
+    func removeTracksFromPlaylist(withId id: String, uris: [String], completion: @escaping (SnapshotResponse?) -> ())
+    func reorderTracksInPlaylist(withId id: String, fromIndex: Int, toIndex: Int, completion: @escaping (SnapshotResponse?) -> ())
+    func updatePlaylistName(withId id: String, name: String, completion: @escaping (Bool) -> ())
+}
 
 /// An implmentation of the Spotify API used for making authenticated requests.
 final class SpotifyApi {
@@ -35,9 +48,15 @@ final class SpotifyApi {
         spotifyOAuth.delegate = self
     }
     
-    
-    // MARK: - API
-    
+    private func makeUrl(withEndpoint endpoint: String) -> URL {
+        return URL(string: SpotifyApi.apiBaseUrl + endpoint)!
+    }
+}
+
+
+// MARK: - API
+
+extension SpotifyApi: NetworkApi {
     /// Makes a request to authorize Spotify via system level authentication.
     func authorize(_ viewController: UIViewController) {
         spotifyOAuth.authorizeSpotify(viewController)
@@ -177,10 +196,6 @@ final class SpotifyApi {
         let url = makeUrl(withEndpoint: "playlists/\(id)")
         let parameters = ["name": name]
         _ = spotifyOAuth.makeVoidRequest(url: url, method: .put, parameters: parameters, completion: completion)
-    }
-    
-    private func makeUrl(withEndpoint endpoint: String) -> URL {
-        return URL(string: SpotifyApi.apiBaseUrl + endpoint)!
     }
 }
 

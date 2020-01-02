@@ -39,7 +39,7 @@ class BasePresenter: NSObject {
     internal let cache: Cache
     
     /// The wrapper API around spotify responsible for processing requests.
-    internal let spotifyApi: SpotifyApi
+    internal let api: NetworkApi
     
     /// Returns true if the user is authenticated.
     var isAuthenticated: Bool {
@@ -69,17 +69,17 @@ class BasePresenter: NSObject {
     ///
     /// - Parameters:
     ///   - cache: The local cache.
-    ///   - spotifyApi: The spotify wrapper api.
-    internal init(cache: Cache, spotifyApi: SpotifyApi = SpotifyApi()) {
+    ///   - api: The spotify wrapper api.
+    internal init(cache: Cache, api: NetworkApi = SpotifyApi()) {
         self.cache = cache
-        self.spotifyApi = spotifyApi
+        self.api = api
         isAuthenticated = cache.userCredentials != nil
         super.init()
     }
     
     /// Makes a request to authrorize the app for Spotify via a system handler.
     func login(_ viewController: UIViewController) {
-        spotifyApi.authorize(viewController)
+        api.authorize(viewController)
     }
 }
 

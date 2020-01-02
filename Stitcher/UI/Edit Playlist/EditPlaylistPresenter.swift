@@ -22,8 +22,8 @@ class EditPlaylistPresenter: BasePresenter {
     
     var playlist: Playlist?
     
-    override init(cache: Cache, spotifyApi: SpotifyApi) {
-        super.init(cache: cache, spotifyApi: spotifyApi)
+    override init(cache: Cache, api: NetworkApi) {
+        super.init(cache: cache, api: api)
     }
     
     func isValidTitle(_ title: String?) -> Bool {
@@ -46,13 +46,13 @@ class EditPlaylistPresenter: BasePresenter {
             return
         }
         
-        spotifyApi.updatePlaylistName(withId: playlistId, name: title) { success in
+        api.updatePlaylistName(withId: playlistId, name: title) { success in
             self.editPlaylistDelegate?.playlistTitleDidSave(success)
         }
     }
     
     func createPlaylist(withTitle title: String, completion: @escaping (Bool) -> ()) {
-        spotifyApi.createPlaylist(name: title) { playlist in
+        api.createPlaylist(name: title) { playlist in
             self.playlist = playlist
             completion(playlist != nil)
         }

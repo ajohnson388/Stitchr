@@ -27,8 +27,8 @@ final class PlaylistPresenter: BasePresenter {
     private var currentSearchRequest: Cancellable?
     private var searchText: String?
     
-    override init(cache: Cache, spotifyApi: SpotifyApi = SpotifyApi()) {
-        super.init(cache: cache, spotifyApi: spotifyApi)
+    override init(cache: Cache, api: NetworkApi = SpotifyApi()) {
+        super.init(cache: cache, api: api)
         tracksDataSource.batchSize = 50
         tracksDataSource.delegate = self
         searchDataSource.delegate = self
@@ -52,7 +52,7 @@ final class PlaylistPresenter: BasePresenter {
         
         // Add the track to the playlist
         let track = searchDataSource.items[index]
-        spotifyApi.addTracksToPlaylist(withId: playlist.id, uris: [track.uri]) { snapshot in
+        api.addTracksToPlaylist(withId: playlist.id, uris: [track.uri]) { snapshot in
             // Show an error if the response is missing
             guard snapshot != nil else {
                 completion(false)
@@ -67,7 +67,7 @@ final class PlaylistPresenter: BasePresenter {
     }
     
     func createPlaylist(withTrackAt index: Int, completion: @escaping (Bool) -> ()) {
-        spotifyApi.createPlaylist(name: Strings.newPlaylistTitle.localized) { playlist in
+        api.createPlaylist(name: Strings.newPlaylistTitle.localized) { playlist in
             // Show an error if the response is missing
             guard let playlist = playlist else {
                 completion(false)
@@ -90,7 +90,7 @@ final class PlaylistPresenter: BasePresenter {
         }
         
         // Remove the track from the playlist
-        spotifyApi.removeTracksFromPlaylist(withId: playlist.id, uris: [track.uri]) { snapshot in
+        api.removeTracksFromPlaylist(withId: playlist.id, uris: [track.uri]) { snapshot in
             
             // Show an error if the response is missing
             guard snapshot != nil else {
@@ -119,7 +119,7 @@ final class PlaylistPresenter: BasePresenter {
         
         // Remove the track from the playlist
         let spotifyToIndex = toIndex > fromIndex ? toIndex + 1 : toIndex
-        spotifyApi.reorderTracksInPlaylist(withId: playlist.id, fromIndex: fromIndex, toIndex: spotifyToIndex) { snapshot in
+        api.reorderTracksInPlaylist(withId: playlist.id, fromIndex: fromIndex, toIndex: spotifyToIndex) { snapshot in
             
             // Show an error if the response is missing
             guard snapshot != nil else {
@@ -149,7 +149,7 @@ extension PlaylistPresenter: TracksDataSourceDelegate {
         
         // Set the loading state and get the tracks
         isLoading = startIndex == 0
-        spotifyApi.getPlaylistTracks(playlistId: playlist.id, offset: startIndex, limit: amount) { pagingResponse in
+        api.getPlaylistTracks(playlistId: playlist.id, offset: startIndex, limit: amount) { pagingResponse in
             self.isLoading = false
             
             // Show an error if the response is missing
@@ -184,7 +184,7 @@ extension PlaylistPresenter: SearchDataSourceDelegate {
         // Cancel any previous search requests and begin loading
         currentSearchRequest?.cancel()
         isLoading = true
-        let request = spotifyApi.searchTracks(searchTerm: searchText, offset: startIndex, limit: amount) { searchResponse in
+        let request = api.searchTracks(searchTerm: searchText, offset: startIndex, limit: amount) { searchResponse in
             self.isLoading = false
             
             // Skip if the search was cancelled

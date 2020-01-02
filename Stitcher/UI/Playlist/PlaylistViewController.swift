@@ -18,8 +18,8 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
     
     static func make(withPlaylist playlist: Playlist? = nil) -> PlaylistViewController {
         let cache = LocalCache()
-        let spotifyApi = SpotifyApi(cache: cache)
-        let playlistPresenter = PlaylistPresenter(cache: cache, spotifyApi: spotifyApi)
+        let api = SpotifyApi(cache: cache)
+        let playlistPresenter = PlaylistPresenter(cache: cache, api: api)
         playlistPresenter.setPlaylist(playlist: playlist)
         cache.delegate = playlistPresenter
         return PlaylistViewController(presenter: playlistPresenter)
@@ -199,8 +199,8 @@ final class PlaylistViewController: BaseTableViewController<PlaylistPresenter>, 
         // Configure second controller transition
         let editPlaylistController = EditPlaylistViewController.make()
         let cache = LocalCache()
-        let spotifyApi = SpotifyApi(cache: cache)
-        let editPresenter = EditPlaylistPresenter(cache: cache, spotifyApi: spotifyApi)
+        let api = SpotifyApi(cache: cache)
+        let editPresenter = EditPlaylistPresenter(cache: cache, api: api)
         editPresenter.editPlaylistDelegate = editPlaylistController
         editPresenter.playlist = presenter.playlist
         editPlaylistController.presenter = editPresenter

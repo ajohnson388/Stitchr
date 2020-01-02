@@ -64,8 +64,8 @@ extension ContainerViewController: PlaylistsViewControllerObserver {
     
     private func makePlaylistViewController(playlist: Playlist?) -> PlaylistViewController {
         let cache = LocalCache()
-        let spotifyApi = SpotifyApi(cache: cache)
-        let playlistPresenter = PlaylistPresenter(cache: cache, spotifyApi: spotifyApi)
+        let api = SpotifyApi(cache: cache)
+        let playlistPresenter = PlaylistPresenter(cache: cache, api: api)
         cache.delegate = playlistPresenter
         playlistPresenter.setPlaylist(playlist: playlist)
         return PlaylistViewController(presenter: playlistPresenter)

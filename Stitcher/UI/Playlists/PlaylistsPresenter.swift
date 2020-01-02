@@ -25,8 +25,8 @@ class PlaylistsPresenter: BasePresenter {
     private let playlistsBatchSize = 30
     private var nextStartIndex = 0
     
-    override init(cache: Cache, spotifyApi: SpotifyApi) {
-        super.init(cache: cache, spotifyApi: spotifyApi)
+    override init(cache: Cache, api: NetworkApi) {
+        super.init(cache: cache, api: api)
         playlistsDataSource.delegate = self
     }
 }
@@ -37,7 +37,7 @@ extension PlaylistsPresenter: PlaylistsDataSourceDelegate {
     func fetchItems(startIndex: Int, amount: Int, completion: @escaping (PagerResult<Playlist>) -> ()) {
         isLoading = startIndex == 0  // Only show empty loading screen if not doing a paging fetch
         error = nil
-        spotifyApi.getPlaylists(offset: startIndex, limit: amount) { pagingResponse in
+        api.getPlaylists(offset: startIndex, limit: amount) { pagingResponse in
             self.isLoading = false
             
             // If the response is missing show an error
