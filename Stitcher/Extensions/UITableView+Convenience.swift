@@ -8,15 +8,8 @@
 
 import Foundation
 import UIKit
-import Anchorage
 
 extension UITableView {
-    
-    func singleSelect(at indexPath: IndexPath) {
-        for path in indexPathsForSelectedRows ?? [] where indexPath != path {
-            deselectRow(at: indexPath, animated: false)
-        }
-    }
     
     var isEmpty: Bool {
         for i in 0..<numberOfSections {
@@ -27,14 +20,20 @@ extension UITableView {
         return true
     }
     
+    func singleSelect(at indexPath: IndexPath) {
+        for path in indexPathsForSelectedRows ?? [] where indexPath != path {
+            deselectRow(at: indexPath, animated: false)
+        }
+    }
+    
     func makePlaylistCell(_ playlist: Playlist) -> UITableViewCell {
         let reuseId = "playlistCell"
         let cell = dequeueReusableCell(withIdentifier: reuseId) as? FixedImageTableViewCell
             ?? FixedImageTableViewCell(style: .subtitle, reuseIdentifier: reuseId)
+        cell.accessoryType = .disclosureIndicator
         cell.titleLabel.text = playlist.name
         cell.detailLabel.text = "\(playlist.tracks.total)" + Strings.numberOfTracks.localized
         cell.setImage(urlString: playlist.images.last?.url)
-        cell.accessoryType = .disclosureIndicator
         return cell
     }
     
@@ -42,10 +41,10 @@ extension UITableView {
         let reuseId = "trackCell"
         let cell = dequeueReusableCell(withIdentifier: reuseId) as? FixedImageTableViewCell
             ?? FixedImageTableViewCell(style: .subtitle, reuseIdentifier: reuseId)
+        cell.selectionStyle = .none
         cell.titleLabel.text = track?.name
         cell.detailLabel.text = track?.sourceDescription
         cell.setImage(urlString: track?.album.images.last?.url)
-        cell.selectionStyle = .none
         return cell
     }
     
@@ -54,9 +53,9 @@ extension UITableView {
         let reuseId = "searchCell"
         let cell = dequeueReusableCell(withIdentifier: reuseId) as? SearchTableViewCell
             ?? SearchTableViewCell(reuseIdentifier: reuseId)
+        cell.selectionStyle = .gray
         cell.titleLabel.text = track?.name
         cell.detailLabel.text = track?.sourceDescription
-        cell.selectionStyle = .gray
         cell.setOccurrences(occurrences)
         cell.setImage(urlString: track?.album.images.last?.url)
         return cell
