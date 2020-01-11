@@ -16,7 +16,8 @@ extension UIWindow {
     }
     
     func initApp() {
-        let controller = ContainerViewController.make()
+        let services = ServiceProvider.getServices()
+        let controller = ContainerViewController.make(cache: services.cache, api: services.api)
         rootViewController = controller
         makeKeyAndVisible()
     }

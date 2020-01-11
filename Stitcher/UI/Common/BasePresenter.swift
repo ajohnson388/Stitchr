@@ -70,7 +70,7 @@ class BasePresenter: NSObject {
     /// - Parameters:
     ///   - cache: The local cache.
     ///   - api: The spotify wrapper api.
-    internal init(cache: Cache, api: NetworkApi = SpotifyApi()) {
+    internal init(cache: Cache, api: NetworkApi) {
         self.cache = cache
         self.api = api
         isAuthenticated = cache.userCredentials != nil

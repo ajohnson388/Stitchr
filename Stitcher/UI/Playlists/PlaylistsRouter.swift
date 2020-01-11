@@ -15,9 +15,9 @@ protocol PlaylistsViewControllerRouter: class {
 
 final class PlaylistsRouter: PlaylistsViewControllerRouter {
     
-    unowned var viewController: UIViewController
+    unowned var viewController: PlaylistsViewController
     
-    init(viewController: UIViewController) {
+    init(viewController: PlaylistsViewController) {
         self.viewController = viewController
     }
     
@@ -26,7 +26,9 @@ final class PlaylistsRouter: PlaylistsViewControllerRouter {
             return
         }
         
-        let playlistViewController = PlaylistViewController.make(withPlaylist: playlist)
+        let playlistViewController = PlaylistViewController.make(withPlaylist: playlist,
+                                                                 cache: viewController.presenter.cache,
+                                                                 api: viewController.presenter.api)
         switch containerController.viewControllers.count {
         case 1:
             openSingleView(playlistViewController: playlistViewController)

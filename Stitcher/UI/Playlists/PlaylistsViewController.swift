@@ -19,9 +19,7 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
     
     // MARK: - Properties
     
-    static func make() -> PlaylistsViewController {
-        let cache = LocalCache()
-        let api = SpotifyApi(cache: cache)
+    static func make(cache: Cache, api: NetworkApi) -> PlaylistsViewController {
         let presenter = PlaylistsPresenter(cache: cache, api: api)
         cache.delegate = presenter
         return PlaylistsViewController(presenter: presenter)
@@ -186,10 +184,9 @@ final class PlaylistsViewController: BaseTableViewController<PlaylistsPresenter>
     // MARK: - Helper Functions
     
     private func makePlaylistViewController(playlist: Playlist?) -> PlaylistViewController {
-        let cache = LocalCache()
-        let api = SpotifyApi(cache: cache)
-        let playlistPresenter = PlaylistPresenter(cache: cache, api: api)
-        cache.delegate = playlistPresenter
+        let services = ServiceProvider.getServices()
+        let playlistPresenter = PlaylistPresenter(cache: services.cache, api: services.api)
+        services.cache.delegate = playlistPresenter
         playlistPresenter.setPlaylist(playlist: playlist)
         return PlaylistViewController(presenter: playlistPresenter)
     }

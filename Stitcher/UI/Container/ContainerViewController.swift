@@ -18,10 +18,10 @@ protocol PlaylistsViewControllerDelegate: class {
 /// The base view controller used in iPad and macOS
 final class ContainerViewController: UISplitViewController {
     
-    static func make() -> ContainerViewController {
+    static func make(cache: Cache, api: NetworkApi) -> ContainerViewController {
         let splitViewController = ContainerViewController()
         splitViewController.preferredDisplayMode = .automatic
-        splitViewController.viewControllers = makeControllers()
+        splitViewController.viewControllers = makeControllers(cache: cache, api: api)
         return splitViewController
     }
     
@@ -41,10 +41,12 @@ final class ContainerViewController: UISplitViewController {
         Theme.apply()
     }
     
-    private static func makeControllers() -> [UIViewController] {
-        var controllers = [UINavigationController(rootViewController: PlaylistsViewController.make())]
+    private static func makeControllers(cache: Cache, api: NetworkApi) -> [UIViewController] {
+        let playlistsController = PlaylistsViewController.make(cache: cache, api: api)
+        var controllers = [UINavigationController(rootViewController: playlistsController)]
         if UIDevice.isPad {
-            controllers.append(UINavigationController(rootViewController: PlaylistViewController.make()))
+            let playlistController = PlaylistViewController.make(cache: cache, api: api)
+            controllers.append(UINavigationController(rootViewController: playlistController))
         }
         return controllers
     }
@@ -63,10 +65,9 @@ extension ContainerViewController: PlaylistsViewControllerObserver {
     }
     
     private func makePlaylistViewController(playlist: Playlist?) -> PlaylistViewController {
-        let cache = LocalCache()
-        let api = SpotifyApi(cache: cache)
-        let playlistPresenter = PlaylistPresenter(cache: cache, api: api)
-        cache.delegate = playlistPresenter
+        let services = ServiceProvider.getServices()
+        let playlistPresenter = PlaylistPresenter(cache: services.cache, api: services.api)
+        services.cache.delegate = playlistPresenter
         playlistPresenter.setPlaylist(playlist: playlist)
         return PlaylistViewController(presenter: playlistPresenter)
     }

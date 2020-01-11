@@ -27,7 +27,7 @@ final class PlaylistPresenter: BasePresenter {
     private var currentSearchRequest: Cancellable?
     private var searchText: String?
     
-    override init(cache: Cache, api: NetworkApi = SpotifyApi()) {
+    override init(cache: Cache, api: NetworkApi) {
         super.init(cache: cache, api: api)
         tracksDataSource.batchSize = 50
         tracksDataSource.delegate = self
